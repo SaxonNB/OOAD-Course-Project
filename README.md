@@ -18,3 +18,9 @@ vue的版本是**vue2**，写的时候注意别用成vue3，否则会不兼容
 写代码的时候一定要**写注释**！！！！！
 
 本地没有下yarn的， 在终端 npm install yarn 就行
+
+
+<h2>项目结构</h2>
+view中放视图，组件放在component中，view中调用component的组件就行，不要直接把所有的东西都写在view中的vue组件里面
+router目录下是路由，也就是页面跳转相关的组件以及对应的路径
+picture等静态资源放在assets里面
