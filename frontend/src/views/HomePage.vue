@@ -1,7 +1,9 @@
 
 
 <template>
-  <h1>这是首页</h1>
+  <div id="homeContainer">
+
+  </div>
 </template>
 
 <script>
