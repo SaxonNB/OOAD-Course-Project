@@ -17,12 +17,6 @@ Vue.use(VueAxios, axios)
 Vue.use(VueAMap);
 
 
-Vue.use(VueAMap)
-VueAMap.initAMapApiLoader({
-  key: '0f03cdb203bf95b394b62c37f8449bc4',
-  plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.PlaceSearch', 'AMap.Geolocation', 'AMap.Geocoder','AMap.ElasticMarker']//一些需要用到的插件
-})
-
 
 new Vue({
   el: '#app',
