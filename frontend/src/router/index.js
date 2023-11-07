@@ -7,12 +7,24 @@ Vue.use(VueRouter)
 
 const routes = [
     {path: '/home', component: HomePage},
-    {path: '/login', component: LoginPage},
-    {path: '/register', component: RegisterPage},
-    {path: '/', redirect: '/login'}
+    {path: '/user/login', component: LoginPage},
+    {path: '/user/register', component: RegisterPage},
+    {path: '/', redirect: '/home'}
 ]
 
-export default new VueRouter({
+const router = new VueRouter({
     mode: 'history',
     routes
 })
+
+// router.beforeEach((to, from, next) => {
+//     if (to.path ==='/user/login') {
+//         // 记录用户登录前的页面，除非从注册页面跳转到登录页面
+//         // 使用 this.$store 来访问 store
+//         this.$store.commit('setOriginalPage', from.path);
+//     }
+//     next();
+// });
+
+
+export default router;

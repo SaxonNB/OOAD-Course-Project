@@ -10,13 +10,15 @@
     </el-form-item>
     <el-form-item style="width: 100%">
       <el-button type="primary" style="width:40%;background: #2c3e50;border:none" @click="login()">登录</el-button>
-      <el-button type="primary" style="width: 40%;background: #2c3e50;border: none" @click="toRegister()">注册</el-button>
+      <el-button type="primary" style="width:40%;background: #2c3e50;border: none" @click="toRegister()">注册</el-button>
     </el-form-item>
   </el-form>
   </body>
 </template>
 
 <script>
+import {baseURL} from "../../../public/urlConfig";
+
 export default {
   name:'LoginPage',
   data(){
@@ -30,21 +32,31 @@ export default {
   methods:{
     login() {
       // console.log(this.loginForm)
-      this.axios.post('http://localhost:8088/login',this.loginForm).then((resp) =>{
+      this.axios.post(baseURL+'/user/login',this.loginForm).then((resp) =>{
         let data = resp.data
         if (data.success){
           this.loginForm = {};
+          localStorage.setItem("account",data.account)
+          localStorage.setItem("token", data.token)   //这块有待商议
           this.$message({
             message: '登陆成功!',
             type: "success"
           });
-          this.$router.push({path:'/home'})
+          // // 获取原始页面路径参数
+          // const originalPage = this.$route.query.redirect;
+          // if (originalPage) {
+          //   this.$router.push(originalPage); // 返回到原始页面
+          // } else {
+          //   // 没有原始页面参数，返回首页或其他默认页面
+          //   this.$router.push('/home');
+          // }
+          // this.$router.push('/home')
         }
       })
 
     },
     toRegister(){
-      this.$router.push({path:'/register'})
+      this.$router.push({path:'/user/register'})
     }
   }
 }

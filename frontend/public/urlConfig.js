@@ -1,0 +1,1 @@
+export const baseURL = 'http://localhost:8088' //修改IP地址,这个可以根据自己的电脑改，我这前端是8080，后端是8088

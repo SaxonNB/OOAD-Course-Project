@@ -21,6 +21,7 @@
 
 
 <script>
+import {baseURL} from "../../../public/urlConfig";
 export default {
   data() {
     var checkAccount = (rule, value, callback) => {
@@ -81,10 +82,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.axios.post('http://localhost:8088/register',this.rForm).then((resp) =>{
+          this.axios.post(baseURL+'/user/register',this.registerForm).then((resp) =>{
             let data = resp.data
             if (data.success){
-              this.loginForm = {};
+              this.registerForm = {};
               this.$message({
                 message: '注册成功!',
                 type: "success"
