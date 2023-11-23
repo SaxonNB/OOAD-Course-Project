@@ -30,7 +30,7 @@ export default {
     },
     adminLogin() {
       // 管理员登录逻辑，可以跳转到管理员登录页面
-      this.$router.push("/admin/login");
+      this.$router.push("/manage");
     }
   }
 }
