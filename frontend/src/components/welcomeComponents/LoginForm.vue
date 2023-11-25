@@ -10,7 +10,11 @@
     </el-form-item>
     <el-form-item style="width: 100%">
       <el-button type="primary" style="width:40%;background: #2c3e50;border:none" @click="login()">登录</el-button>
-      <el-button type="primary" style="width:40%;background: #2c3e50;border: none" @click="toRegister()">注册</el-button>
+      <el-button type="primary" style="width:40%;background: #2c3e50;border: none" @click="toRegister()" :disabled="isAdmin">注册
+      </el-button>
+    </el-form-item>
+    <el-form-item style="width: 100%; text-align: center; margin-top: 20px;">
+      <el-switch v-model="isAdmin" active-text="管理员" inactive-text="用户"></el-switch>
     </el-form-item>
   </el-form>
   </body>
@@ -20,50 +24,58 @@
 import {baseURL} from "../../../public/urlConfig";
 
 export default {
-  name:'LoginPage',
-  data(){
-    return{
-      loginForm:{
-        account:'',
-        password:''
-      }
+  name: 'LoginPage',
+  data() {
+    return {
+      loginForm: {
+        account: '',
+        password: ''
+      },
+      isAdmin: false
     }
   },
-  methods:{
+  methods: {
     login() {
       // console.log(this.loginForm)
-      this.axios.post(baseURL+'/user/login',this.loginForm).then((resp) =>{
-        let data = resp.data
-        if (data.success){
-          this.loginForm = {};
-          localStorage.setItem("account",data.account)
-          localStorage.setItem("token", data.token)   //这块有待商议
-          this.$message({
-            message: '登陆成功!',
-            type: "success"
-          });
-          // // 获取原始页面路径参数
-          // const originalPage = this.$route.query.redirect;
-          // if (originalPage) {
-          //   this.$router.push(originalPage); // 返回到原始页面
-          // } else {
-          //   // 没有原始页面参数，返回首页或其他默认页面
-          //   this.$router.push('/home');
-          // }
-          // this.$router.push('/home')
-        }
-      })
-
+      if (this.isAdmin) {
+        this.axios.post(baseURL + '/register/login', this.loginForm).then((resp) => {
+          let data = resp.data
+          if (data.success) {
+            this.loginForm = {};
+            localStorage.setItem("account", data.account)
+            localStorage.setItem("token", data.token)   //这块有待商议
+            this.$message({
+              message: '登陆成功!',
+              type: "success"
+            });
+            this.$router.push('/home')
+          }
+        })
+      }else {
+        this.axios.post(baseURL + '/user/login', this.loginForm).then((resp) => {
+          let data = resp.data
+          if (data.success) {
+            this.loginForm = {};
+            localStorage.setItem("account", data.account)
+            localStorage.setItem("token", data.token)   //这块有待商议
+            this.$message({
+              message: '登陆成功!',
+              type: "success"
+            });
+            this.$router.push('/adminHome')
+          }
+        })
+      }
     },
-    toRegister(){
-      this.$router.push({path:'/user/register'})
+    toRegister() {
+      this.$router.push({path: '/user/register'})
     }
   }
 }
 </script>
 
 <style>
-#poster{
+#poster {
   background-image: url('@/assets/loginBackground.jpg');
   background-position: center;
   height: 100%;
@@ -71,11 +83,13 @@ export default {
   background-size: cover;
   position: fixed;
 }
-body{
+
+body {
   margin: 0;
   padding: 0;
 }
-.login-container{
+
+.login-container {
   border-radius: 15px;
   background-clip: padding-box;
   margin: 90px auto;
@@ -86,7 +100,8 @@ body{
   box-shadow: 0 0 25px;
   opacity: 0.9;
 }
-.login_tittle{
+
+.login_tittle {
   margin: 0 auto 40px auto;
   text-align: center;
   color: #505458;

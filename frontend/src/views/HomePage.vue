@@ -1,9 +1,8 @@
 <template>
   <div>
     <div class="header">
-      <h1>欢迎来到我的主页</h1>
+      <h1>南方科技大学校园开放平台</h1>
       <button @click="userLogin">用户登录</button>
-      <button @click="adminLogin">管理员登录</button>
     </div>
 
     <div class="navbar">
@@ -26,11 +25,7 @@ export default {
   methods: {
     userLogin() {
       // 用户登录逻辑，可以跳转到用户登录页面
-      this.$router.push("/user/login");
-    },
-    adminLogin() {
-      // 管理员登录逻辑，可以跳转到管理员登录页面
-      this.$router.push("/admin/login");
+      this.$router.push("/login");
     }
   }
 }
