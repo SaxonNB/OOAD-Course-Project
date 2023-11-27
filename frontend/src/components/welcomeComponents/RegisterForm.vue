@@ -82,7 +82,7 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.axios.post(baseURL+'/user/register',this.registerForm).then((resp) =>{
+          this.axios.post(baseURL+'/register',this.registerForm).then((resp) =>{
             let data = resp.data
             if (data.success){
               this.registerForm = {};

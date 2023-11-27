@@ -26,6 +26,11 @@ export default {
     userLogin() {
       // 用户登录逻辑，可以跳转到用户登录页面
       this.$router.push("/login");
+      this.$router.push("/user/login");
+    },
+    adminLogin() {
+      // 管理员登录逻辑，可以跳转到管理员登录页面
+      this.$router.push("/manage");
     }
   }
 }

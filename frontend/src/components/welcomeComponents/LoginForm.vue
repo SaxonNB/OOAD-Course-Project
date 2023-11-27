@@ -38,7 +38,7 @@ export default {
     login() {
       // console.log(this.loginForm)
       if (this.isAdmin) {
-        this.axios.post(baseURL + '/register/login', this.loginForm).then((resp) => {
+        this.axios.post(baseURL + '/admin/login', this.loginForm).then((resp) => {
           let data = resp.data
           if (data.success) {
             this.loginForm = {};
@@ -68,7 +68,7 @@ export default {
       }
     },
     toRegister() {
-      this.$router.push({path: '/user/register'})
+      this.$router.push({path: '/register'})
     }
   }
 }

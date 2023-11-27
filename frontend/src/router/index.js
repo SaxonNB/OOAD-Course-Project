@@ -3,13 +3,34 @@ import Vue from "vue";
 import LoginPage from "../views/LoginPage.vue";
 import RegisterPage from "../views/RegisterPage.vue";
 import HomePage from "../views/HomePage.vue";
+import ManagePage from '../views/ManagePage.vue';
+import UserInformation from '../components/manageComponents/UserInformation.vue';
+import BuildingInformation from '../components/manageComponents/BuildingInformation.vue';
+import ProjectStatus from '../components/manageComponents/ProjectStatus.vue';
 Vue.use(VueRouter)
 
 const routes = [
     {path: '/home', component: HomePage},
     {path: '/login', component: LoginPage},
     {path: '/user/register', component: RegisterPage},
-    {path: '/', redirect: '/home'}
+    {path: '/', redirect: '/home'},
+    { path: '/home', component: HomePage },
+    { path: '/user/login', component: LoginPage },
+    { path: '/user/register', component: RegisterPage },
+    { path: '/', redirect: '/home' },
+    {
+        path: '/manage',
+        component: ManagePage,
+        children: [
+            {
+                path: '',
+                redirect: 'UserInformation'
+            },
+            { path: 'UserInformation', component: UserInformation },
+            { path: 'BuildingInformation', component: BuildingInformation },
+            { path: 'ProjectStatus', component: ProjectStatus },
+        ]
+    }
 ]
 
 const router = new VueRouter({

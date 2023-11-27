@@ -23,6 +23,6 @@ new Vue({
   router,
   render: h => h(App),
   components:{
-      App
+    App
   }
 }).$mount('#app')
