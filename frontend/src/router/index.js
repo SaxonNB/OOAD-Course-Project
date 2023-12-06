@@ -11,13 +11,9 @@ Vue.use(VueRouter)
 
 const routes = [
     {path: '/home', component: HomePage},
-    {path: '/login', component: LoginPage},
+    {path: '/user/login', component: LoginPage},
     {path: '/user/register', component: RegisterPage},
     {path: '/', redirect: '/home'},
-    { path: '/home', component: HomePage },
-    { path: '/user/login', component: LoginPage },
-    { path: '/user/register', component: RegisterPage },
-    { path: '/', redirect: '/home' },
     {
         path: '/manage',
         component: ManagePage,

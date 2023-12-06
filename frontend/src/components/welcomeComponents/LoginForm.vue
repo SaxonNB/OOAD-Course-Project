@@ -68,13 +68,13 @@ export default {
       }
     },
     toRegister() {
-      this.$router.push({path: '/register'})
+      this.$router.push({path: '/user/register'})
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 #poster {
   background-image: url('@/assets/loginBackground.jpg');
   background-position: center;

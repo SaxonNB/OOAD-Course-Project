@@ -96,7 +96,7 @@ export default {
   },
 }
 </script>
-<style>
+<style scoped>
 #container {
   width: 80%;
   height: 800px;
