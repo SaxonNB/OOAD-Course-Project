@@ -21,10 +21,11 @@
 
 
 <script>
-import {baseURL} from "../../../public/urlConfig";
+import {userRegisterApi} from "@/api/user";
+
 export default {
   data() {
-    var checkAccount = (rule, value, callback) => {
+    const checkAccount = (rule, value, callback) => {
       if (!value) {
         return callback(new Error('账号不能为空'));
       }
@@ -37,7 +38,7 @@ export default {
         }
       }, 1000);
     };
-    var validatePass = (rule, value, callback) => {
+    const validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'));
       } else {
@@ -47,7 +48,7 @@ export default {
         callback();
       }
     };
-    var validatePass2 = (rule, value, callback) => {
+    const validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
       } else if (value !== this.registerForm.password) {
@@ -82,16 +83,22 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.axios.post(baseURL+'/register',this.registerForm).then((resp) =>{
-            let data = resp.data
-            if (data.success){
-              this.registerForm = {};
-              this.$message({
-                message: '注册成功!',
-                type: "success"
-              });
-              this.$router.push({path:'/home'})
-            }
+          userRegisterApi({
+            account: this.registerForm.account,
+            password: this.registerForm.password,
+            checkPass: this.registerForm.password
+          }).then(() => {
+            this.registerForm = {};
+            this.$message({
+              message: '注册成功!',
+              type: "success"
+            });
+            this.$router.push({path:'/login'})
+          }).catch(() => {
+            this.$message({
+              message: '注册失败!',
+              type: "error"
+            });
           })
         } else {
           console.log('error submit!!');

@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div>
+      <MyHeader />
+    </div>
     <div class="header">
       <h1>南方科技大学校园开放平台</h1>
       <button @click="userLogin">用户登录</button>
@@ -14,14 +17,23 @@
     <div class="map">
       <SustechMap></SustechMap>
     </div>
+    <div class="footer">
+      <MyFooter></MyFooter>
+    </div>
   </div>
 </template>
 
 <script>
 import SustechMap from "@/components/mapComponents/SustechMap.vue";
+import MyFooter from "@/components/welcomeComponents/MyFooter.vue";
+import MyHeader from "@/components/welcomeComponents/MyHeader.vue";
 export default {
   name: "HomePage",
-  components: {SustechMap},
+  components: {
+    MyHeader,
+    MyFooter,
+    SustechMap,
+  },
   methods: {
     userLogin() {
       // 用户登录逻辑，可以跳转到用户登录页面

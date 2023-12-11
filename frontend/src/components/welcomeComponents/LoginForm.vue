@@ -9,8 +9,8 @@
       <el-input type="password" v-model="loginForm.password" autocomplete="off" placeholder="请输入密码"></el-input>
     </el-form-item>
     <el-form-item style="width: 100%">
-      <el-button type="primary" style="width:40%;background: #2c3e50;border:none" @click="login()">登录</el-button>
-      <el-button type="primary" style="width:40%;background: #2c3e50;border: none" @click="toRegister()" :disabled="isAdmin">注册
+      <el-button type="primary" style="width:40%;background: #2c3e50;border:none" @click="handleLogin()">登录</el-button>
+      <el-button type="primary" style="width:40%;background: #2c3e50;border: none" @click="handleRegister()" :disabled="isAdmin">注册
       </el-button>
     </el-form-item>
     <el-form-item style="width: 100%; text-align: center; margin-top: 20px;">
@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import {baseURL} from "../../../public/urlConfig";
 
 export default {
   name: 'LoginPage',
@@ -34,41 +33,44 @@ export default {
       isAdmin: false
     }
   },
+  created() {
+    // Ensure Vuex is installed
+    if (!this.$store) {
+      throw new Error('Vuex is not installed. Make sure to call Vue.use(Vuex).');
+    }
+  },
   methods: {
-    login() {
+    async handleLogin() {
+      // const userStore = useUserStore();
       // console.log(this.loginForm)
       if (this.isAdmin) {
-        this.axios.post(baseURL + '/admin/login', this.loginForm).then((resp) => {
-          let data = resp.data
-          if (data.success) {
-            this.loginForm = {};
-            localStorage.setItem("account", data.account)
-            localStorage.setItem("token", data.token)   //这块有待商议
-            this.$message({
-              message: '登陆成功!',
-              type: "success"
-            });
-            this.$router.push('/home')
-          }
-        })
+        const result = await this.$store.dispatch('adminLogin',this.loginForm);
+        if (result.code === 200){
+          this.$message({
+            message: '登陆成功!',
+            type: "success"
+          });
+          await this.$router.push('/manage')
+        }else {
+          console.log(result)
+          console.log('qqqqqq')
+        }
       }else {
-        this.axios.post(baseURL + '/user/login', this.loginForm).then((resp) => {
-          let data = resp.data
-          if (data.success) {
-            this.loginForm = {};
-            localStorage.setItem("account", data.account)
-            localStorage.setItem("token", data.token)   //这块有待商议
-            this.$message({
-              message: '登陆成功!',
-              type: "success"
-            });
-            this.$router.push('/adminHome')
-          }
-        })
+        const result = await this.$store.dispatch('userLogin',this.loginForm);
+        if (result.code === 200){
+          this.$message({
+            message: '登陆成功!',
+            type: "success"
+          });
+          await this.$router.push('/home')
+        }else {
+          console.log(result)
+          console.log('qqqqqq')
+        }
       }
     },
-    toRegister() {
-      this.$router.push({path: '/register'})
+    handleRegister() {
+      this.$router.push({path: '/user/register'})
     }
   }
 }

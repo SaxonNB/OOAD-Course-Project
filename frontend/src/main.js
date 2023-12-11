@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 import axios from "axios";
 import VueAxios from "vue-axios"
+import store from "@/store/store";
 Vue.config.productionTip = false
 Vue.use(Vuex)
 Vue.use(VueRouter)
@@ -21,6 +22,7 @@ Vue.use(VueAMap);
 new Vue({
   el: '#app',
   router,
+  store,
   render: h => h(App),
   components:{
     App
