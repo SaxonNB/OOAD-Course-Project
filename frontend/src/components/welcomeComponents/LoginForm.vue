@@ -69,7 +69,6 @@ export default {
         }
       }
     },
-
     handleRegister() {
       this.$router.push({path: '/user/register'})
     }
