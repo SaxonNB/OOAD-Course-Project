@@ -5,11 +5,11 @@
 </template>
 
 <script>
-import Login from "@/components/welcomeComponents/LoginForm.vue";
-export default {
-  name: "LoginPage",
-  components: {Login}
-}
+  import Login from "@/components/welcomeComponents/LoginForm.vue";
+  export default {
+    name: "LoginPage",
+    components: {Login}
+  }
 </script>
 
 <style scoped>

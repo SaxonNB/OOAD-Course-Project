@@ -1,27 +1,30 @@
 <template>
-    <el-container>
-        <!-- 侧边栏 -->
-        <el-aside width="200px">
-            <el-menu :default-active="activeMenu" class="el-menu-vertical-demo">
-                <el-menu-item index="UserInformation" @click="handleMenuItemClick('UserInformation')">用户信息</el-menu-item>
-                <el-menu-item index="BuildingInformation"
-                    @click="handleMenuItemClick('BuildingInformation')">楼宇信息</el-menu-item>
-                <el-menu-item index="ProjectStatus" @click="handleMenuItemClick('ProjectStatus')">项目情况</el-menu-item>
-            </el-menu>
-        </el-aside>
+    <body id="poster">
+        <el-container class="container">
+            <!-- 侧边栏 -->
+            <el-aside width="200px">
+                <el-menu :default-active="activeMenu" class="el-menu-vertical-demo">
+                    <el-menu-item index="UserInformation"
+                        @click="handleMenuItemClick('UserInformation')">用户信息</el-menu-item>
+                    <el-menu-item index="BuildingInformation"
+                        @click="handleMenuItemClick('BuildingInformation')">楼宇信息</el-menu-item>
+                    <el-menu-item index="ProjectStatus" @click="handleMenuItemClick('ProjectStatus')">项目情况</el-menu-item>
+                </el-menu>
+            </el-aside>
 
-        <!-- 右侧内容区域 -->
-        <el-container>
-            <el-header style="text-align: right; font-size: 12px">
-                <el-button type="text" @click="handleLogout">退出</el-button>
-            </el-header>
+            <!-- 右侧内容区域 -->
+            <el-container>
+                <el-header style="text-align: right; font-size: 12px">
+                    <el-button type="default" @click="handleLogout">退出</el-button>
+                </el-header>
 
-            <el-main>
-                <!-- 路由视图，用于显示子页面 -->
-                <router-view></router-view>
-            </el-main>
+                <el-main>
+                    <!-- 路由视图，用于显示子页面 -->
+                    <router-view></router-view>
+                </el-main>
+            </el-container>
         </el-container>
-    </el-container>
+    </body>
 </template>
   
 <script>
@@ -54,5 +57,8 @@ export default {
 </script>
   
 <style scoped>
-/* 样式 */
+.container {
+    margin: 0;
+    padding: 0;
+}
 </style>

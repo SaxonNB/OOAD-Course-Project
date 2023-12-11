@@ -6,6 +6,7 @@
     <div class="header">
       <h1>南方科技大学校园开放平台</h1>
       <button @click="userLogin">用户登录</button>
+      <button @click="adminLogin">管理员界面</button>
     </div>
 
     <div class="navbar">
@@ -37,7 +38,6 @@ export default {
   methods: {
     userLogin() {
       // 用户登录逻辑，可以跳转到用户登录页面
-      this.$router.push("/login");
       this.$router.push("/user/login");
     },
     adminLogin() {

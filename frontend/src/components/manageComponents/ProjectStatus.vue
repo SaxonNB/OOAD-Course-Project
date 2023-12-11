@@ -13,8 +13,13 @@
     </el-table>
 
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
+<<<<<<< HEAD
                    :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
                    :total="tableData.length" />
+=======
+      :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+      :total="tableData.length" />
+>>>>>>> 871e7367d106c45d540994a2c9e93b9952fafb9e
 
     <!-- 添加数据的按钮 -->
     <el-button type="primary" @click="handleAdd">添加数据</el-button>
@@ -139,4 +144,8 @@ export default {
 
 <style scoped>
 /* 样式 */
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> 871e7367d106c45d540994a2c9e93b9952fafb9e

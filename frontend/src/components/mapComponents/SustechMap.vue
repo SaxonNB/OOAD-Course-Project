@@ -115,8 +115,12 @@ export default {
   },
 }
 </script>
+<<<<<<< HEAD
 
 <style>
+=======
+<style scoped>
+>>>>>>> 871e7367d106c45d540994a2c9e93b9952fafb9e
 #container {
   width: 80%;
   height: 800px;

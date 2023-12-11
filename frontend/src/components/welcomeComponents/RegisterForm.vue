@@ -113,7 +113,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #poster{
   background-image: url('@/assets/loginBackground.jpg');
   background-position: center;
