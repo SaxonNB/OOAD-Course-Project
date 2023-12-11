@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .header {
   text-align: center;
   padding: 20px;
