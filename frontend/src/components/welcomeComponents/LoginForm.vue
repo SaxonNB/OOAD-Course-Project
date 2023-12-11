@@ -69,11 +69,8 @@ export default {
         }
       }
     },
-<<<<<<< HEAD
+
     handleRegister() {
-=======
-    toRegister() {
->>>>>>> 871e7367d106c45d540994a2c9e93b9952fafb9e
       this.$router.push({path: '/user/register'})
     }
   }
