@@ -1,11 +1,47 @@
 <template>
   <div>
-    <select v-model="selectedCategory" @change="updateMarkers">
-      <option value="All">所有类别</option>
-      <option value="CategoryA">类别A</option>
-      <option value="CategoryB">类别B</option>
-      <!-- 添加其他类别的选项 -->
-    </select>
+    <div class="toggle-button" @click="toggleSidebar">
+      <span v-if="showRouteSearch">隐藏侧边栏</span>
+      <span v-else>显示侧边栏</span>
+    </div>
+
+    <div class="sidebar" :class="{ 'hidden': !showRouteSearch }">
+      <div>
+        <el-form>
+          <el-form-item label="建筑物类型">
+            <el-select v-model="selectedCategory" @change="updateMarkers" placeholder="请选择" class="custom-select">
+              <el-option label="所有类别" value="All"></el-option>
+              <el-option label="类别A" value="CategoryA"></el-option>
+              <el-option label="类别B" value="CategoryB"></el-option>
+              <!-- 添加其他类别的选项 -->
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </div>
+      <div>
+        <el-form>
+          <el-form-item label="选择起始建筑物">
+            <el-select v-model="startBuilding" placeholder="请选择">
+              <el-option v-for="building in buildingData" :key="building.id" :label="building.name" :value="building.id"></el-option>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="选择目标建筑物">
+            <el-select v-model="targetBuilding" placeholder="请选择">
+              <el-option v-for="building in buildingData" :key="building.id" :label="building.name" :value="building.id"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item style="width: 100%; text-align: center; margin-top: 20px;">
+            <el-switch v-model="searchType" active-text="Walk" inactive-text="Bus"></el-switch>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="searchRoutes">查询路线</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+
+    </div>
+
     <div id="container"></div>
   </div>
 </template>
@@ -21,26 +57,26 @@ export default {
       map: null,
       infoWindow: null,
       markers: [],
-      selectedCategory: 'All', // 默认显示所有类别
-      buildingData: [], // Declare buildingData as a component data property
-    }
+      selectedCategory: 'All',
+      buildingData: [],
+      showRouteSearch: false,
+      startBuilding: null,
+      targetBuilding: null,
+      searchType: 'Bus'
+    };
   },
   methods: {
     async getBuildingDataFromServer() {
-      try {
-        // 从服务器获取建筑物信息的异步函数
-        // 假设从服务器获取的数据格式如下，包含建筑物的id、名称、坐标、类别、简介和图片信息
-        this.buildingData = [
-          { id: 1, name: '建筑物1', location: [114.005, 22.597], category: 'CategoryA', introduction: '建筑物1的简介', image: 'url/to/image1.jpg' },
-          { id: 2, name: '建筑物2', location: [113.990, 22.595], category: 'CategoryB', introduction: '建筑物2的简介', image: 'url/to/image2.jpg' },
-          // ... 其他建筑物数据
-        ];
+      // 从服务器获取建筑物信息的异步函数
+      // 假设从服务器获取的数据格式如下，包含建筑物的id、名称、坐标、类别、简介和图片信息
+      this.buildingData = [
+        { id: 1, name: '建筑物1', location: [114.005, 22.597], category: 'CategoryA', introduction: '建筑物1的简介', image: 'url/to/image1.jpg' },
+        { id: 2, name: '建筑物2', location: [113.990, 22.595], category: 'CategoryB', introduction: '建筑物2的简介', image: 'url/to/image2.jpg' },
+        // ... 其他建筑物数据
+      ];
 
-        // 在获取数据后，调用方法在地图上标点
-        this.addMarkers();
-      } catch (error) {
-        console.error("Failed to get building data from the server:", error);
-      }
+      // 在获取数据后，调用方法在地图上标点
+      this.addMarkers();
     },
     addMarkers() {
       this.map.clearMap()
@@ -109,19 +145,84 @@ export default {
       // 根据建筑物ID进行详细信息的导航
       this.$router.push({ path: `/building/${buildingId}` });
     },
+    toggleSidebar() {
+      // 切换侧边栏的显示状态
+      this.showRouteSearch = !this.showRouteSearch;
+    },
+    searchRoutes() {
+      // 执行路线查询的逻辑，可以通过路由或其他方式导航到路线结果页面
+      // 例如：this.$router.push(`/routes?start=${this.startBuilding}&target=${this.targetBuilding}`);
+    },
   },
   created() {
     this.initMap();
   },
-}
+};
 </script>
 
 <style scoped>
 #container {
-  width: 80%;
-  height: 800px;
+  width: 100%;
+  height: 900px;
   margin: 100px auto;
-  border: 1px solid red;
   overflow: hidden;
+}
+
+.sidebar {
+  /* 侧边栏样式，可以根据需要添加样式 */
+  width: 500px;
+  height: 300px;
+  position: fixed;
+  top: 300px;
+  right: 0;
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: -5px 0 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  border-radius: 30px;
+  z-index: 1;
+}
+
+.hidden {
+  transform: translateX(100%);
+}
+
+.toggle-button {
+  position: fixed;
+  top: 250px;
+  right: 20px;
+  cursor: pointer;
+  padding: 10px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  z-index: 1;
+}
+.custom-select .el-input {
+  width: 200px; /* 设置选择框的宽度 */
+}
+
+.custom-select .el-input__suffix {
+  right: 10px; /* 调整箭头的位置 */
+}
+
+.custom-select .el-input__inner {
+  padding: 10px; /* 调整内部输入框的内边距 */
+  height: 40px; /* 设置输入框的高度 */
+  border: 1px solid #ccc; /* 自定义边框样式 */
+  border-radius: 5px; /* 设置边框圆角 */
+}
+
+.custom-select .el-select-dropdown {
+  border-radius: 5px; /* 设置下拉框的圆角 */
+}
+
+.custom-select .el-select-dropdown__item {
+  padding: 10px; /* 调整下拉选项的内边距 */
+}
+
+.custom-select .el-select-dropdown__item.hover {
+  background-color: #f0f0f0; /* 设置鼠标悬停时的背景颜色 */
 }
 </style>

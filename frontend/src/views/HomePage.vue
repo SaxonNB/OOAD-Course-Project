@@ -10,7 +10,6 @@
     </div>
 
     <div class="navbar">
-      <router-link to="/bus-route">公交路线查询</router-link>
       <router-link to="/restaurant-reservation">餐饮预订</router-link>
       <router-link to="/creative-products">文创产品预订</router-link>
     </div>

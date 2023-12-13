@@ -1,5 +1,11 @@
+
 module.exports = {
   presets: [
-    '@vue/cli-plugin-babel/preset'
-  ]
+    '@vue/app'
+  ],
+  env: {
+    development: {
+      plugins: ['dynamic-import-node']
+    }
+  }
 }
