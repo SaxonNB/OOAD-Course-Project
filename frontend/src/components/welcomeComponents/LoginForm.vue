@@ -3,7 +3,7 @@
   <el-form class="login-container" label-position="left">
     <h3 class="login_tittle">登录</h3>
     <el-form-item label="账号">
-      <el-input type="text" v-model="loginForm.account" autocomplete="off" placeholder="请输入账号"></el-input>
+      <el-input type="text" v-model="loginForm.name" autocomplete="off" placeholder="请输入账号"></el-input>
     </el-form-item>
     <el-form-item label="密码">
       <el-input type="password" v-model="loginForm.password" autocomplete="off" placeholder="请输入密码"></el-input>
@@ -27,7 +27,7 @@ export default {
   data() {
     return {
       loginForm: {
-        account: '',
+        name: '',
         password: ''
       },
       isAdmin: false
@@ -45,6 +45,7 @@ export default {
       // console.log(this.loginForm)
       if (this.isAdmin) {
         const result = await this.$store.dispatch('adminLogin',this.loginForm);
+        console.log(result)
         if (result.code === 200){
           this.$message({
             message: '登陆成功!',

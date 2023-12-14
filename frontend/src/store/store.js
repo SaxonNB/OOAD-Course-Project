@@ -71,6 +71,8 @@ export default new Vuex.Store({
         async adminLogin({ commit }, loginForm) {
             try {
                 const result = await adminLoginApi(loginForm);
+                console.log('zzzzz')
+                console.log(result)
                 if (result.code === 200) {
                     commit('adminLogin', result.data);
                     localStorage.setItem(ADMIN_USER_TOKEN, result.data.token);

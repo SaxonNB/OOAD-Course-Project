@@ -1,7 +1,7 @@
 import { get, post } from '@/utils/http';
 
 const URL = {
-    adminLogin: '/admin/login',
+    adminLogin: 'http://localhost:8082/user/adminlogin',
     userList: '/user/list',
     detail: '/user/detail',
     create: '/user/create',
@@ -13,7 +13,7 @@ const URL = {
     updateUserInfo: '/user/updateUserInfo',
 };
 
-const adminLoginApi = async (data) => post({ url: URL.login, data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });
+const adminLoginApi = async (data) => post({ url: URL.adminLogin, data, headers: { 'Content-Type': 'application/json;charset=utf-8' } });
 const listApi = async (params) => get({ url: URL.userList, params, data: {}, headers: {} });
 const detailApi = async (params) => get({ url: URL.detail, params, data: {}, headers: {} });
 const createApi = async (data) => post({ url: URL.create, params: {}, data, headers: { 'Content-Type': 'multipart/form-data;charset=utf-8' } });
