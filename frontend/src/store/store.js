@@ -53,8 +53,12 @@ export default new Vuex.Store({
         async userLogin({ commit }, loginForm) {
             try {
                 const result = await userLoginApi(loginForm);
-                if (result.code === 200) {
+                console.log('cccccccc')
+                console.log(result)
+                if (result.status === 200) {
                     commit('userLogin', result.data);
+                    console.log(result.data)
+                    console.log('llllllllll')
                     localStorage.setItem(USER_TOKEN, result.data.token);
                     localStorage.setItem(USER_NAME, result.data.username);
                     localStorage.setItem(USER_ID, result.data.id);
@@ -73,7 +77,9 @@ export default new Vuex.Store({
                 const result = await adminLoginApi(loginForm);
                 console.log('zzzzz')
                 console.log(result)
-                if (result.code === 200) {
+                // console.log(result.status)
+                if (result.status === 200) {
+                    console.log('登陆成功')
                     commit('adminLogin', result.data);
                     localStorage.setItem(ADMIN_USER_TOKEN, result.data.token);
                     localStorage.setItem(ADMIN_USER_NAME, result.data.username);

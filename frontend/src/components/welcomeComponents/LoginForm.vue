@@ -46,7 +46,7 @@ export default {
       if (this.isAdmin) {
         const result = await this.$store.dispatch('adminLogin',this.loginForm);
         console.log(result)
-        if (result.code === 200){
+        if (result.status === 200){
           this.$message({
             message: '登陆成功!',
             type: "success"
@@ -54,11 +54,10 @@ export default {
           await this.$router.push('/manage')
         }else {
           console.log(result)
-          console.log('qqqqqq')
         }
       }else {
         const result = await this.$store.dispatch('userLogin',this.loginForm);
-        if (result.code === 200){
+        if (result.status === 200){
           this.$message({
             message: '登陆成功!',
             type: "success"
@@ -66,7 +65,6 @@ export default {
           await this.$router.push('/home')
         }else {
           console.log(result)
-          console.log('qqqqqq')
         }
       }
     },
