@@ -1881,7 +1881,7 @@ ajv@^8.0.0, ajv@^8.0.1, ajv@^8.9.0:
 
 amap@^1.0.7:
   version "1.0.7"
-  resolved "https://registry.npmmirror.com/amap/-/amap-1.0.7.tgz"
+  resolved "https://registry.npmmirror.com/amap/-/amap-1.0.7.tgz#2f1fca39d61b1ac7f5250ca910835ca244383a03"
   integrity sha512-A5Bmklw5nFuxZvrrspirV+pqorE0gdEwg85JiF444j+Jt1YFYALsF/496d6WiWca0H1bS84r3GcsHNBo90urZQ==
   dependencies:
     asfs "^1.0.5"

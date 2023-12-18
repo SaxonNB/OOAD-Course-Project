@@ -25,7 +25,7 @@ export default new Vuex.Store({
         // 用户登录 mutation
         userLogin(state, userData) {
             state.user_id = userData.id;
-            state.user_name = userData.username;
+            state.user_name = userData.name;
             state.user_token = userData.token;
         },
         // 用户登出 mutation
@@ -37,7 +37,7 @@ export default new Vuex.Store({
         // 管理员登录 mutation
         adminLogin(state, adminData) {
             state.admin_user_id = adminData.id;
-            state.admin_user_name = adminData.username;
+            state.admin_user_name = adminData.name;
             state.admin_user_token = adminData.token;
         },
         // 管理员登出 mutation
@@ -60,7 +60,7 @@ export default new Vuex.Store({
                     console.log(result.data)
                     console.log('llllllllll')
                     localStorage.setItem(USER_TOKEN, result.data.token);
-                    localStorage.setItem(USER_NAME, result.data.username);
+                    localStorage.setItem(USER_NAME, result.data.name);
                     localStorage.setItem(USER_ID, result.data.id);
                 }
                 return result;
@@ -69,6 +69,13 @@ export default new Vuex.Store({
                 console.error('Error in userLogin action:', error);
                 return { code: 500, message: 'Internal Server Error' };
             }
+        },
+
+        userLogout({commit}){
+            commit('userLogout')
+        },
+        adminLogout({commit}){
+            commit('adminLogout')
         },
 
         // 管理员登录 action
@@ -82,7 +89,7 @@ export default new Vuex.Store({
                     console.log('登陆成功')
                     commit('adminLogin', result.data);
                     localStorage.setItem(ADMIN_USER_TOKEN, result.data.token);
-                    localStorage.setItem(ADMIN_USER_NAME, result.data.username);
+                    localStorage.setItem(ADMIN_USER_NAME, result.data.name);
                     localStorage.setItem(ADMIN_USER_ID, result.data.id);
                 }
                 return result;

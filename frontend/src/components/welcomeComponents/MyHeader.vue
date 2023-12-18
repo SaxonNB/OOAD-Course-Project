@@ -4,14 +4,12 @@
     <div class="logo">
       <img src="../../assets/SustechLogo.png" alt="Logo">
     </div>
-
-    <div v-if="userStore.user_token">
+    <div class="user-info" v-if="userStore.user_token">
       <!-- 用户已登录 -->
       <div>{{ userStore.user_name }}</div>
       <button @click="logout">退出</button>
     </div>
-    <div v-else>
-      <!-- 用户未登录 -->
+    <div class="login-button" v-else>
       <button @click="login">登录</button>
     </div>
   </div>
@@ -25,12 +23,12 @@ export default {
     },
   },
   methods: {
-    login() {
-      this.$store.dispatch('userLogin', { /* loginForm 数据 */ });
-    },
     logout() {
       this.$store.dispatch('userLogout');
     },
+    login(){
+      this.$router.push("/user/login");
+    }
   },
 };
 </script>
@@ -45,18 +43,31 @@ export default {
   background: #fff;
   border-bottom: 1px solid #cedce4;
   padding-left: 48px;
+  padding-right: 48px; /* 在右侧添加一些内边距 */
   z-index: 16;
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-.logo {
-  margin-right: 24px;
 
-  img {
-    max-width: 100%; /* 设置最大宽度为父元素的100% */
-    max-height: 100%; /* 设置最大高度为父元素的100% */
-    cursor: pointer;
+.logo {
+  margin-right: auto; /* 将 Logo 推到左侧 */
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+
+  div {
+    margin-right: 80px;
   }
+
+  button {
+    margin-right: 50px; /* 将退出按钮推到最右侧 */
+  }
+}
+
+.login-button {
+  margin-right: 50px; /* 将登录按钮推到最右侧 */
 }
 </style>
