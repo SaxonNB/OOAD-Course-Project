@@ -11,8 +11,14 @@
           <el-form-item label="建筑物类型">
             <el-select v-model="selectedCategory" @change="updateMarkers" placeholder="请选择" class="custom-select">
               <el-option label="所有类别" value="All"></el-option>
-              <el-option label="公交站" value="busStation"></el-option>
-              <el-option label="教学楼" value="teachingBuilding"></el-option>
+              <el-option label="科研楼" value="科研楼"></el-option>
+              <el-option label="校门" value="校门"></el-option>
+              <el-option label="教学楼" value="教学楼"></el-option>
+              <el-option label="运动场地" value="运动场地"></el-option>
+              <el-option label="超市" value="超市"></el-option>
+              <el-option label="餐厅" value="餐厅"></el-option>
+              <el-option label="医院" value="医院"></el-option>
+              <el-option label="图书馆" value="图书馆"></el-option>
               <!-- 添加其他类别的选项 -->
             </el-select>
           </el-form-item>
@@ -49,6 +55,7 @@
 <script>
 /* global AMap */
 import AMapLoader from '@amap/amap-jsapi-loader'
+import {getAllBuildings} from '@/api/user';
 window._AMapSecurityConfig = {
   securityJsCode: '3c9cf70ce0cf6f70861ad5b41e2e896d'
 }
@@ -73,11 +80,14 @@ export default {
     async getBuildingDataFromServer() {
       // 从服务器获取建筑物信息的异步函数
       // 假设从服务器获取的数据格式如下，包含建筑物的id、名称、坐标、类别、简介和图片信息
-      this.buildingData = [
-        { id: 1, name: '一号门公交站', location: [113.999341, 22.593114], category: 'busStation', introduction: '建筑物1的简介', image: 'url/to/image1.jpg' },
-        { id: 2, name: '专家公寓公交站', location: [114.003456, 22.598949], category: 'busStation', introduction: '建筑物2的简介', image: 'url/to/image2.jpg' },
-        // ... 其他建筑物数据
-      ];
+      const result = await getAllBuildings();
+      // console.log(result)
+      this.buildingData = result.data
+      // this.buildingData = [
+      //   { id: 1, name: '一号门公交站', location: [113.999341, 22.593114], category: 'busStation', introduction: '建筑物1的简介', image: 'url/to/image1.jpg' },
+      //   { id: 2, name: '专家公寓公交站', location: [114.003456, 22.598949], category: 'busStation', introduction: '建筑物2的简介', image: 'url/to/image2.jpg' },
+      //   // ... 其他建筑物数据
+      // ];
 
       // 在获取数据后，调用方法在地图上标点
       this.addMarkers();
@@ -86,6 +96,7 @@ export default {
       this.map.clearMap()
       this.buildingData.forEach((building) => {
         if (this.selectedCategory === 'All' || building.category === this.selectedCategory) {
+          // console.log(building.location)
           const marker = new AMap.Marker({
             position: building.location,
             map: this.map,
@@ -128,10 +139,9 @@ export default {
         });
 
         this.map.setLimitBounds(new AMap.Bounds(
-            [113.999341, 22.593114],  // 左下角经纬度
-            [114.003456, 22.598949]   // 右上角经纬度
+            [113.994686, 22.591222],  // 左下角经纬度
+            [114.012388, 22.610099]   // 右上角经纬度
         ));
-
         this.infoWindow = new AMap.InfoWindow({
           offset: new AMap.Pixel(0, -30),
         });
@@ -180,7 +190,7 @@ export default {
       console.log(requestData)
       console.log(this.startBuilding)
       console.log(this.targetBuilding)
-      // let requestEndpoint = '';
+      let requestEndpoint = '';
 
       // 根据搜索类型选择不同的请求接口
       if (this.searchType) {
@@ -197,12 +207,15 @@ export default {
 
         console.log(this.searchType)
         console.log('Start Location:', startLocation);
-        console.log('Target Location:', targetLocation);
-        const walking = new AMap.Walking({
+        console.log('Target Location:', targetLocation)
+        if (this.walkingPath!==null){
+          this.walkingPath.clear()
+        }
+        this.walkingPath = new AMap.Walking({
           map: this.map,
         });
 
-        walking.search([113.999341, 22.593114], [114.003456, 22.598949], (status, result) => {
+        this.walkingPath.search(startLocation, targetLocation, (status, result) => {
           if (status === 'complete' || result.info === 'OK') {
             // this.drawWalkingPath(result.routes[0].steps);
             console.log("绘制路线完成")
@@ -214,17 +227,17 @@ export default {
         });
       } else {
         console.log('bus search')
-        // requestEndpoint = '/searchBusRoutes';
-        // // 向服务器发送请求
-        // this.axios.post(requestEndpoint, requestData)
-        //     .then(response => {
-        //       // 处理服务器返回的数据，这里假设服务器返回的是一个有序列表
-        //       const orderedBuildingList = response.data;
-        //     })
-        //     .catch(error => {
-        //       console.error('Error searching routes:', error);
-        //       // 这里可以添加一些错误处理逻辑，比如给用户提示
-        //     });
+        // 向服务器发送请求
+        this.axios.post(requestEndpoint, requestData)
+            .then(response => {
+              // 处理服务器返回的数据，这里假设服务器返回的是一个有序列表
+              const orderedBuildingList = response.data;
+              console.log(orderedBuildingList)
+            })
+            .catch(error => {
+              console.error('Error searching routes:', error);
+              // 这里可以添加一些错误处理逻辑，比如给用户提示
+            });
       }
 
 

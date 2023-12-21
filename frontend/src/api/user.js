@@ -3,7 +3,9 @@ import axios from 'axios';
 const URL = {
     adminLogin: 'http://localhost:8082/user/adminlogin',
     userLogin: 'http://localhost:8082/user/userlogin',
-    userRegister: '/user/userRegister',
+    userRegister: 'http://localhost:8082/user/userRegister',
+    getAllBuildings: 'http://localhost:8082/building/buildingCover',
+    getBusRoute: 'http://localhost:8082/route/planRoute'
 };
 
 const adminLoginApi = async (data) => {
@@ -25,8 +27,21 @@ const userRegisterApi = (data) => {
     });
 };
 
+const getAllBuildings = () => {
+    return axios.get(URL.getAllBuildings,{
+        headers: { 'Content-Type': 'application/json;charset=utf-8' }
+    });
+}
+
+const getBusRoute = (data) => {
+    return axios.get(URL.getAllBuildings,{
+        headers: { 'Content-Type': 'application/json;charset=utf-8' }
+    });
+}
+
 export {
     adminLoginApi,
     userLoginApi,
-    userRegisterApi
+    userRegisterApi,
+    getAllBuildings,
 };
