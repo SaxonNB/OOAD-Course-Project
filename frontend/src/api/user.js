@@ -33,11 +33,11 @@ const getAllBuildings = () => {
     });
 }
 
-const getBusRoute = (data) => {
-    return axios.get(URL.getAllBuildings,{
-        headers: { 'Content-Type': 'application/json;charset=utf-8' }
-    });
-}
+// const getBusRoute = (data) => {
+//     return axios.get(URL.getAllBuildings,{
+//         headers: { 'Content-Type': 'application/json;charset=utf-8' }
+//     });
+// }
 
 export {
     adminLoginApi,

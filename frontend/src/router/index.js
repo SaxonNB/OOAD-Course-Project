@@ -7,6 +7,12 @@ import ManagePage from '../views/ManagePage.vue';
 import UserInformation from '../components/manageComponents/UserInformation.vue';
 import BuildingInformation from '../components/manageComponents/BuildingInformation.vue';
 import ProjectStatus from '../components/manageComponents/ProjectStatus.vue';
+import BuildingStatus from "@/components/welcomeComponents/BuildingStatus.vue";
+import RestaurantReservation from "@/components/welcomeComponents/RestaurantReservation.vue";
+import CommentAreas from "@/components/welcomeComponents/CommentAreas.vue";
+import ShoppingList from "@/components/welcomeComponents/ShoppingList.vue";
+import CreativeProduct from "@/components/welcomeComponents/CreativeProduct.vue";
+import CreativeList from "@/components/welcomeComponents/CreativeList.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -26,7 +32,14 @@ const routes = [
             { path: 'BuildingInformation', component: BuildingInformation },
             { path: 'ProjectStatus', component: ProjectStatus },
         ]
-    }
+    },
+    {path: '/building', component: BuildingStatus},
+    {path: '/comments', component: CommentAreas},
+    {path:'/restaurant-reservation',component: RestaurantReservation},
+    {path:'/restaurant-reservation/shoppingList', component: ShoppingList},
+    {path:'/creative-products',component: CreativeProduct},
+    {path:'/creative-products/creative-list', component: CreativeList},
+
 ]
 
 const router = new VueRouter({
