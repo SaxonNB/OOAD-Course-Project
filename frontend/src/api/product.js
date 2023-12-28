@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const URL = {
-    AllCuisine: 'http://localhost:8082/goods/',
+    AllProduct: 'http://localhost:8082/goods/',
     EditCuisine: 'http://localhost:8082/goods/',
     AddCuisine: 'http://localhost:8082/goods/',
     DeleteCuisine: 'http://localhost:8082/goods/',
