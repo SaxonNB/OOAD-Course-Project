@@ -73,7 +73,17 @@
           <el-input v-model="editedRowData.name"></el-input>
         </el-form-item>
         <el-form-item label="标签" prop="tag">
-          <el-input v-model="editedRowData.tag"></el-input>
+          <el-select v-model="editedRowData.tag" placeholder="请选择">
+            <el-option label="校门" value="校门"></el-option>
+            <el-option label="科研楼" value="科研楼"></el-option>
+            <el-option label="餐厅" value="餐厅"></el-option>
+            <el-option label="医院" value="医院"></el-option>
+            <el-option label="运动场地" value="运动场地"></el-option>
+            <el-option label="宿舍" value="宿舍"></el-option>
+            <el-option label="图书馆" value="图书馆"></el-option>
+            <el-option label="教学楼" value="教学楼"></el-option>
+            <el-option label="超市" value="超市"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="描述" prop="description">
           <el-input v-model="editedRowData.description"></el-input>

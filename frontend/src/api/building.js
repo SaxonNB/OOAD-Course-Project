@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const URL = {
     AllBuilding: 'http://localhost:8082/building/',
-    EditBuilding: 'http://localhost:8082/building/',
-    AddBuilding: 'http://localhost:8082/building/add',
+    EditBuilding: 'http://localhost:8082/building/edit',
+    AddBuilding: 'http://localhost:8082/building/addBuilding',
 };
 
 const AllBuildings = () => {
