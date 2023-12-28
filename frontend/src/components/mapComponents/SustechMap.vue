@@ -28,13 +28,15 @@
         <el-form>
           <el-form-item label="选择起始建筑物">
             <el-select v-model="startBuilding" placeholder="请选择">
-              <el-option v-for="building in buildingData" :key="building.id" :label="building.name" :value="building.id"></el-option>
+              <el-option v-for="building in buildingData" :key="building.id" :label="building.name"
+                         :value="building.id"></el-option>
             </el-select>
           </el-form-item>
 
           <el-form-item label="选择目标建筑物">
             <el-select v-model="targetBuilding" placeholder="请选择">
-              <el-option v-for="building in buildingData" :key="building.id" :label="building.name" :value="building.id"></el-option>
+              <el-option v-for="building in buildingData" :key="building.id" :label="building.name"
+                         :value="building.id"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item style="width: 100%; text-align: center; margin-top: 20px;">
@@ -55,7 +57,9 @@
 <script>
 /* global AMap */
 import AMapLoader from '@amap/amap-jsapi-loader'
-import {getAllBuildings} from '@/api/user';
+import {getAllBuildings, getBusRoute} from '@/api/user';
+import Vue from "vue";
+
 window._AMapSecurityConfig = {
   securityJsCode: '3c9cf70ce0cf6f70861ad5b41e2e896d'
 }
@@ -73,16 +77,16 @@ export default {
       targetBuilding: null,
       searchType: false,
       walkingPath: null,
+      busPath: null
     };
   },
   methods: {
-
     async getBuildingDataFromServer() {
       // 从服务器获取建筑物信息的异步函数
       // 假设从服务器获取的数据格式如下，包含建筑物的id、名称、坐标、类别、简介和图片信息
       const result = await getAllBuildings();
       // console.log(result)
-      this.buildingData = result.data
+      this.buildingData = result.data;
       // this.buildingData = [
       //   { id: 1, name: '一号门公交站', location: [113.999341, 22.593114], category: 'busStation', introduction: '建筑物1的简介', image: 'url/to/image1.jpg' },
       //   { id: 2, name: '专家公寓公交站', location: [114.003456, 22.598949], category: 'busStation', introduction: '建筑物2的简介', image: 'url/to/image2.jpg' },
@@ -94,6 +98,9 @@ export default {
     },
     addMarkers() {
       this.map.clearMap()
+      console.log('bbbb')
+      console.log(this.buildingData)
+      console.log(this.buildingData[1].coverPath)
       this.buildingData.forEach((building) => {
         if (this.selectedCategory === 'All' || building.category === this.selectedCategory) {
           // console.log(building.location)
@@ -106,18 +113,40 @@ export default {
 
           AMap.event.addListener(marker, 'click', () => {
             const lnglat = marker.getPosition();
+            console.log('aaaaa');
+            console.log(building);
 
-            // 在信息窗体中显示信息和详细信息的链接
-            this.infoWindow.setContent(`
-              <div>
-                <h3>${building.name}</h3>
-                <p>${building.introduction}</p>
-                <img src="${building.image}" alt="${building.name}" style="max-width: 100%; height: auto;">
-                <a href="javascript:void(0);" @click="showDetails(${building.id})">查看详细信息</a>
-              </div>
-            `);
+            // 创建一个 Vue 组件实例，用于显示详细信息
+            const infoComponent = new Vue({
+              render(h) {
+                return h('div', [
+                  h('h3', this.building.name),
+                  h('p', this.building.introduction),
+                  h('img', { attrs: { src: this.building.path }, style: { maxWidth: '100%', height: '200px' } }),
+                  h('button', { on: { click: this.showDetails } }, '查看详细信息')
+                ]);
+              },
+              data() {
+                return {
+                  building: building
+                };
+              },
+              methods: {
+                showDetails() {
+                  // 在组件实例中调用 showDetails 方法
+                  this.$router.push({ path: `/user/login` });
+                }
+              }
+            });
 
+            // 在信息窗体中显示 Vue 组件
+            this.infoWindow.setContent(document.createElement('div'));
             this.infoWindow.open(this.map, lnglat);
+
+            // 使用 Vue.nextTick 来确保组件挂载完毕
+            this.$nextTick(() => {
+              this.infoWindow.setContent(infoComponent.$mount().$el);
+            });
           });
 
           this.markers.push(marker);
@@ -127,7 +156,7 @@ export default {
     initMap() {
       AMapLoader.load({
         key: "8bf3022e63d5048a188a8f99118336fa",
-        plugins:['AMap.Walking']
+        plugins: ['AMap.Walking', 'AMap.Driving']
       }).then((AMap) => {
         this.map = new AMap.Map("container", {
           viewMode: "3D",
@@ -156,9 +185,10 @@ export default {
       this.markers = [];
       this.addMarkers();
     },
-    showDetails(buildingId) {
+    showDetails() {
       // 根据建筑物ID进行详细信息的导航
-      this.$router.push({ path: `/building/${buildingId}` });
+      // this.$router.push({ path: `/building/${buildingId}` });\
+      this.$router.push({path: `/user/login`});
     },
     toggleSidebar() {
       // 切换侧边栏的显示状态
@@ -190,7 +220,7 @@ export default {
       console.log(requestData)
       console.log(this.startBuilding)
       console.log(this.targetBuilding)
-      let requestEndpoint = '';
+      // let requestEndpoint = '';
 
       // 根据搜索类型选择不同的请求接口
       if (this.searchType) {
@@ -208,8 +238,11 @@ export default {
         console.log(this.searchType)
         console.log('Start Location:', startLocation);
         console.log('Target Location:', targetLocation)
-        if (this.walkingPath!==null){
+        if (this.walkingPath !== null) {
           this.walkingPath.clear()
+        }
+        if (this.busPath !== null) {
+          this.busPath.clear()
         }
         this.walkingPath = new AMap.Walking({
           map: this.map,
@@ -226,21 +259,50 @@ export default {
           }
         });
       } else {
+
         console.log('bus search')
+        console.log(this.searchType)
+        const startLocation = this.findBuildingLocationById(this.startBuilding);
+        const targetLocation = this.findBuildingLocationById(this.targetBuilding);
+        console.log(this.startBuilding)
+        console.log(this.targetBuilding)
+        if (!startLocation || !targetLocation) {
+          // Handle the case where the building locations are not found
+          console.error('Error: Building locations not found.');
+          return;
+        }
+        if (this.walkingPath !== null) {
+          this.walkingPath.clear()
+        }
+        if (this.busPath !== null) {
+          this.busPath.clear()
+        }
+        this.busPath = new AMap.Driving({
+          map: this.map,
+          // panel: 'panel'
+        });
+        const result = await getBusRoute(this.startBuilding, this.targetBuilding);
+        const stationList = result.data;
+        // 获取起始点和目标点
+        const startPosition = new AMap.LngLat(stationList[0][0], stationList[0][1]);
+        const targetPosition = new AMap.LngLat(stationList[stationList.length - 1][0], stationList[stationList.length - 1][1]);
+
+        // 获取途经点
+        const passPoints = stationList.slice(1, -1).map(coords => new AMap.LngLat(coords[0], coords[1]));
+
+        // 调用 search 方法绘制驾车路线
+        this.busPath.search(startPosition, targetPosition, {
+          waypoints: passPoints
+        }, (status, result) => {
+          if (status === 'complete') {
+            console.log('绘制驾车路线完成');
+          } else {
+            console.error('获取驾车数据失败：', result, status);
+          }
+        });
+        console.log('bus finsh')
         // 向服务器发送请求
-        this.axios.post(requestEndpoint, requestData)
-            .then(response => {
-              // 处理服务器返回的数据，这里假设服务器返回的是一个有序列表
-              const orderedBuildingList = response.data;
-              console.log(orderedBuildingList)
-            })
-            .catch(error => {
-              console.error('Error searching routes:', error);
-              // 这里可以添加一些错误处理逻辑，比如给用户提示
-            });
       }
-
-
     },
   },
   created() {
@@ -288,6 +350,7 @@ export default {
   border-radius: 5px;
   z-index: 1;
 }
+
 .custom-select .el-input {
   width: 200px; /* 设置选择框的宽度 */
 }

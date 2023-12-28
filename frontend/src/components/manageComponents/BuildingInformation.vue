@@ -16,8 +16,8 @@
     </el-table>
 
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-      :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
-      :total="tableData.length" />
+                   :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+                   :total="tableData.length"/>
 
     <el-button type="primary" @click="dialogVisible = true">添加数据</el-button>
 
@@ -54,9 +54,9 @@
         </el-form-item>
         <el-form-item label="上传图片" style="position: relative;">
           <input type="file" @change="handleFileUpload"
-            style="position: absolute; top: 0; left: 0; opacity: 100; width: 100%; height: 100%;" />
+                 style="position: absolute; top: 0; left: 0; opacity: 100; width: 100%; height: 100%;"/>
           <img v-if="selectedFileUrl" :src="selectedFileUrl" alt="Selected Image"
-            style="max-width: 100%; max-height: 200px; margin-top: 10px; box-sizing: border-box; border: 1px solid #ccc; padding: 5px;" />
+               style="max-width: 100%; max-height: 200px; margin-top: 10px; box-sizing: border-box; border: 1px solid #ccc; padding: 5px;"/>
         </el-form-item>
       </el-form>
 
@@ -101,20 +101,19 @@
 
 <script>
 // import axios from 'axios';
-import { AllBuildings, EditBuildings, AddBuildings } from '@/api/building';
+import {AllBuildings, EditBuildings, AddBuildings} from '@/api/building';
+
 export default {
   name: "BuildingInformation",
   data() {
     return {
-      tableData: [
-      ],
+      tableData: [],
       currentPage: 1,
       pageSize: 5,
       editDialogVisible: false,
       dialogVisible: false,
       editedRowData: null, // 保存编辑的行数据
-      formData: {
-      },
+      formData: {},
       selectedFile: null,
       selectedFileUrl: '', // 添加用于存储数据 URL 的属性
     };
@@ -134,7 +133,14 @@ export default {
       const transformedData = responseData.map(item => {
         if (Array.isArray(item)) {
           // 如果是数组，转换为对象
-          return { name: item[0], tag: item[1], description: item[2], details: item[3], latitude: item[4], longitude: item[5] };
+          return {
+            name: item[0],
+            tag: item[1],
+            description: item[2],
+            details: item[3],
+            latitude: item[4],
+            longitude: item[5]
+          };
         } else {
           // 如果是对象，直接返回
           return item;
@@ -152,7 +158,7 @@ export default {
     handleEdit(row) {
 
       // 可以在这里打开编辑对话框，并将编辑的行数据保存在 data 中
-      this.editedRowData = { ...row };
+      this.editedRowData = {...row};
       this.editDialogVisible = true;
       console.log(row);
     },
@@ -168,55 +174,63 @@ export default {
       // 如果找到了对应的行
       if (index !== -1) {
         // 替换行数据
-        this.$set(this.tableData, index, { ...this.editedRowData });
+        this.$set(this.tableData, index, {...this.editedRowData});
       }
       // 保存完成后关闭编辑对话框
       this.editDialogVisible = false;
     },
     // 新增代码：确认添加数据
     async handleAddConfirm() {
-      // const formData = new FormData();
-      // // 将其他表单项数据加入 FormData
-      // console.log('name:', this.formData.name);
-      // console.log('tag:', this.formData.tag);
-      // console.log('description:', this.formData.description);
-      // console.log('details:', this.formData.details);
-      // console.log('latitude:', this.formData.latitude);
-      // console.log('longitude:', this.formData.longitude);
+      try {
+        // Create a FormData object
+        const formData = new FormData();
 
-      // formData.append('name', this.formData.name);
-      // formData.append('tag', this.formData.tag);
-      // formData.append('description', this.formData.description);
-      // formData.append('details', this.formData.details);
-      // formData.append('latitude', this.formData.latitude);
-      // formData.append('longitude', this.formData.longitude);
-      // formData.append('image', this.selectedFile);
+        // Append form data properties to the FormData object
+        formData.append('name', this.formData.name);
+        formData.append('tag', this.formData.tag);
+        formData.append('description', this.formData.description);
+        formData.append('details', this.formData.details);
+        formData.append('latitude', this.formData.latitude);
+        formData.append('longitude', this.formData.longitude);
 
-      // console.log(formData);
+        // Append the file to the FormData object
+        if (this.selectedFile) {
+          formData.append('file', this.selectedFile, this.selectedFile.name);
+        }
 
-      await AddBuildings(this.formData, this.selectedFile);
+        // Call the server-side API with the FormData object
+        await AddBuildings(formData);
 
-      this.tableData.push({
-        name: this.formData.name,
-        tag: this.formData.tag,
-        description: this.formData.description,
-        details: this.formData.details,
-        latitude: this.formData.latitude,
-        longitude: this.formData.longitude,
-      });
+        // Update front-end data after successful addition
+        this.tableData.push({
+          name: this.formData.name,
+          tag: this.formData.tag,
+          description: this.formData.description,
+          details: this.formData.details,
+          latitude: this.formData.latitude,
+          longitude: this.formData.longitude,
+        });
 
+        // Reset form data
+        this.formData.name = '';
+        this.formData.tag = '';
+        this.formData.description = '';
+        this.formData.details = '';
+        this.formData.latitude = '';
+        this.formData.longitude = '';
 
-      this.formData.name = '';
-      this.formData.tag = '';
-      this.formData.description = '';
-      this.formData.details = '';
-      this.formData.latitude = '';
-      this.formData.longitude = '';
+        // Close the dialog
+        this.dialogVisible = false;
 
-      this.dialogVisible = false;
-      this.selectedFile = null;
-      this.selectedFileUrl = '';
+        // Clear file selection
+        this.selectedFile = null;
+        this.selectedFileUrl = '';
+      } catch (error) {
+        // Handle the case where adding data fails
+        console.error('Error adding data:', error);
+      }
     },
+
     handleFileUpload(event) {
       this.selectedFile = event.target.files[0];
       this.selectedFileUrl = URL.createObjectURL(this.selectedFile);

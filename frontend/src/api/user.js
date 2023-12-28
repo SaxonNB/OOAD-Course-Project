@@ -10,7 +10,7 @@ const URL = {
 
 const adminLoginApi = async (data) => {
     return axios.post(URL.adminLogin, data, {
-        headers: { 'Content-Type': 'application/json;charset=utf-8' }
+        headers: { 'Content-Type': 'application/json;charset=utf-8' ,'Authorization': `Bearer ${localStorage.getItem('admin_user_token')}`}
     });
 };
 
@@ -33,15 +33,20 @@ const getAllBuildings = () => {
     });
 }
 
-// const getBusRoute = (data) => {
-//     return axios.get(URL.getAllBuildings,{
-//         headers: { 'Content-Type': 'application/json;charset=utf-8' }
-//     });
-// }
+const getBusRoute = (buildingId1,buildingId2) => {
+    return axios.get(URL.getBusRoute,{
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        params: {
+            buildingId1: buildingId1,
+            buildingId2: buildingId2
+        }
+    });
+}
 
 export {
     adminLoginApi,
     userLoginApi,
     userRegisterApi,
     getAllBuildings,
+    getBusRoute
 };
