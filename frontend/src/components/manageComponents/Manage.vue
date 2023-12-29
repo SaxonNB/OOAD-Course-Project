@@ -8,7 +8,11 @@
                         @click="handleMenuItemClick('UserInformation')">用户信息</el-menu-item>
                     <el-menu-item index="BuildingInformation"
                         @click="handleMenuItemClick('BuildingInformation')">楼宇信息</el-menu-item>
-                    <el-menu-item index="ProjectStatus" @click="handleMenuItemClick('ProjectStatus')">项目情况</el-menu-item>
+                    <el-menu-item index="CuisineProduct" @click="handleMenuItemClick('CuisineProduct')">菜品</el-menu-item>
+                    <el-menu-item index="CuturalProduct" @click="handleMenuItemClick('CuturalProduct')">文创产品</el-menu-item>
+                    <el-menu-item index="BusStation" @click="handleMenuItemClick('BusStation')">公交车站</el-menu-item>
+                    <el-menu-item index="BusRoute" @click="handleMenuItemClick('BusRoute')">公交线</el-menu-item>
+                    <el-menu-item index="UserComment" @click="handleMenuItemClick('UserComment')">用户评论</el-menu-item>
                 </el-menu>
             </el-aside>
 

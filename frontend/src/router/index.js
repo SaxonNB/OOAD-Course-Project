@@ -6,7 +6,11 @@ import HomePage from "../views/HomePage.vue";
 import ManagePage from '../views/ManagePage.vue';
 import UserInformation from '../components/manageComponents/UserInformation.vue';
 import BuildingInformation from '../components/manageComponents/BuildingInformation.vue';
-import ProjectStatus from '../components/manageComponents/ProjectStatus.vue';
+import CuisineProduct from '../components/manageComponents/CuisineProduct.vue';
+import CuturalProduct from '../components/manageComponents/CuturalProduct.vue';
+import BusRoute from '../components/manageComponents/BusRoute.vue';
+import BusStation from '../components/manageComponents/BusStation.vue';
+import UserComment from '../components/manageComponents/UserComment.vue';
 import BuildingStatus from "@/components/welcomeComponents/BuildingStatus.vue";
 import RestaurantReservation from "@/components/welcomeComponents/RestaurantReservation.vue";
 import CommentAreas from "@/components/welcomeComponents/CommentAreas.vue";
@@ -30,7 +34,11 @@ const routes = [
             },
             { path: 'UserInformation', component: UserInformation },
             { path: 'BuildingInformation', component: BuildingInformation },
-            { path: 'ProjectStatus', component: ProjectStatus },
+            { path: 'CuisineProduct', component: CuisineProduct },
+            { path: 'CuturalProduct', component: CuturalProduct },
+            { path: 'BusRoute', component: BusRoute },
+            { path: 'BusStation', component: BusStation },
+            { path: 'UserComment', component: UserComment },
         ]
     },
     {path: '/building', component: BuildingStatus},

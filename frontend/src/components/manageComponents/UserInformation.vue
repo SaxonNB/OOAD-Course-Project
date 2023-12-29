@@ -58,11 +58,6 @@ export default {
       ],
       currentPage: 1,
       pageSize: 5,
-      dialogVisible: false,
-      formData: {
-        name: '',
-        password: '',
-      },
     };
   },
   computed: {

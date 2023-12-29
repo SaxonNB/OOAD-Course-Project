@@ -2,34 +2,34 @@ import axios from 'axios';
 
 const URL = {
     AllProduct: 'http://localhost:8082/goods/',
-    EditCuisine: 'http://localhost:8082/goods/',
-    AddCuisine: 'http://localhost:8082/goods/',
-    DeleteCuisine: 'http://localhost:8082/goods/',
+    EditProduct: 'http://localhost:8082/goods/',
+    AddProduct: 'http://localhost:8082/goods/',
+    DeleteProduct: 'http://localhost:8082/goods/',
 };
 
-const AllCuisines = () => {
-    return axios.get(URL.AllCuisine, {
+const AllProducts = () => {
+    return axios.get(URL.AllProduct, {
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
-const EditCuisines = (data) => {
-    return axios.post(URL.EditCuisine, {data},{
+const EditProducts = (data) => {
+    return axios.post(URL.EditProduct, {data},{
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
-const AddCuisines = (data) => {
-    return axios.post(URL.AddCuisine, {data},{
+const AddProducts = (data) => {
+    return axios.post(URL.AddProduct, {data},{
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
-const DeleteCuisine = (name) => {
-    return axios.post(URL.DeleteCuisine, {name},{
+const DeleteProducts = (name) => {
+    return axios.post(URL.DeleteProduct, {name},{
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
@@ -37,8 +37,8 @@ const DeleteCuisine = (name) => {
 
 
 export {
-    AllCuisines,
-    EditCuisines,
-    AddCuisines,
-    DeleteCuisine,
+    AllProducts,
+    EditProducts,
+    AddProducts,
+    DeleteProducts,
 };
