@@ -23,7 +23,7 @@ const EditBuildings = (data) => {
 const AddBuildings = (data) => {
     console.log(data);
     return axios.post(URL.AddBuilding, data,{
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
+        headers: { 'Content-Type': 'multipart/form-data'
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }

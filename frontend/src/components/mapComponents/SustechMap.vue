@@ -58,13 +58,16 @@
 /* global AMap */
 import AMapLoader from '@amap/amap-jsapi-loader'
 import {getAllBuildings, getBusRoute} from '@/api/user';
-import Vue from "vue";
+
 
 window._AMapSecurityConfig = {
   securityJsCode: '3c9cf70ce0cf6f70861ad5b41e2e896d'
 }
 export default {
   name: "SustechMap",
+  // components: {
+  //   BuildingDetail
+  // },
   data() {
     return {
       map: null,
@@ -77,7 +80,8 @@ export default {
       targetBuilding: null,
       searchType: false,
       walkingPath: null,
-      busPath: null
+      busPath: null,
+      buildingId: null
     };
   },
   methods: {
@@ -97,13 +101,10 @@ export default {
       this.addMarkers();
     },
     addMarkers() {
-      this.map.clearMap()
-      console.log('bbbb')
-      console.log(this.buildingData)
-      console.log(this.buildingData[1].coverPath)
+      this.map.clearMap();
+
       this.buildingData.forEach((building) => {
         if (this.selectedCategory === 'All' || building.category === this.selectedCategory) {
-          // console.log(building.location)
           const marker = new AMap.Marker({
             position: building.location,
             map: this.map,
@@ -113,46 +114,24 @@ export default {
 
           AMap.event.addListener(marker, 'click', () => {
             const lnglat = marker.getPosition();
-            console.log('aaaaa');
-            console.log(building);
+            this.buildingId = building.id;
+            this.infoWindow.setContent(`
+            <div>
+              <h3>${building.name}</h3>
+              <p>${building.introduction}</p>
+              <img ref="detailsImage" src="${building.path}" style="max-width: 100%; height: 200px;">
+              <button onclick='handleRestore()' style="color:blue; font-size: 15px;">查看详情</button>
+            </div>
+          `);
 
-            // 创建一个 Vue 组件实例，用于显示详细信息
-            const infoComponent = new Vue({
-              render(h) {
-                return h('div', [
-                  h('h3', this.building.name),
-                  h('p', this.building.introduction),
-                  h('img', { attrs: { src: this.building.path }, style: { maxWidth: '100%', height: '200px' } }),
-                  h('button', { on: { click: this.showDetails } }, '查看详细信息')
-                ]);
-              },
-              data() {
-                return {
-                  building: building
-                };
-              },
-              methods: {
-                showDetails() {
-                  // 在组件实例中调用 showDetails 方法
-                  this.$router.push({ path: `/user/login` });
-                }
-              }
-            });
-
-            // 在信息窗体中显示 Vue 组件
-            this.infoWindow.setContent(document.createElement('div'));
             this.infoWindow.open(this.map, lnglat);
-
-            // 使用 Vue.nextTick 来确保组件挂载完毕
-            this.$nextTick(() => {
-              this.infoWindow.setContent(infoComponent.$mount().$el);
-            });
           });
 
           this.markers.push(marker);
         }
       });
     },
+
     initMap() {
       AMapLoader.load({
         key: "8bf3022e63d5048a188a8f99118336fa",
@@ -185,11 +164,12 @@ export default {
       this.markers = [];
       this.addMarkers();
     },
-    showDetails() {
-      // 根据建筑物ID进行详细信息的导航
-      // this.$router.push({ path: `/building/${buildingId}` });\
-      this.$router.push({path: `/user/login`});
+    handleRestore() {
+      // 使用 buildingId 导航到建筑物详细信息页面
+      // console.log('显示建筑物详情，ID为：', this.buildingId);
+      this.$router.push({ path: `/building/${this.buildingId}` });
     },
+
     toggleSidebar() {
       // 切换侧边栏的显示状态
       this.showRouteSearch = !this.showRouteSearch;
@@ -307,6 +287,8 @@ export default {
   },
   created() {
     this.initMap();
+    window.handleRestore = this.handleRestore;
+
   },
 };
 </script>

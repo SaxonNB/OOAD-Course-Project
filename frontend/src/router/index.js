@@ -17,6 +17,7 @@ import CommentAreas from "@/components/welcomeComponents/CommentAreas.vue";
 import ShoppingList from "@/components/welcomeComponents/ShoppingList.vue";
 import CreativeProduct from "@/components/welcomeComponents/CreativeProduct.vue";
 import CreativeList from "@/components/welcomeComponents/CreativeList.vue";
+import BuildingDetail from "@/components/mapComponents/BuildingDetail.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -24,6 +25,12 @@ const routes = [
     {path: '/user/login', component: LoginPage},
     {path: '/user/register', component: RegisterPage},
     {path: '/', redirect: '/home'},
+    {
+        path: '/building/:id',
+        name: 'buildingDetail',
+        component: BuildingDetail,
+        // 其他配置...
+    },
     {
         path: '/manage',
         component: ManagePage,

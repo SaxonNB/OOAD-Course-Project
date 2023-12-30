@@ -3,9 +3,16 @@ import axios from 'axios';
 const URL = {
     adminLogin: 'http://localhost:8082/user/adminlogin',
     userLogin: 'http://localhost:8082/user/userlogin',
-    userRegister: 'http://localhost:8082/user/userRegister',
+    userRegister: 'http://localhost:8082/user/register',
     getAllBuildings: 'http://localhost:8082/building/buildingCover',
-    getBusRoute: 'http://localhost:8082/route/planRoute'
+    getBusRoute: 'http://localhost:8082/route/planRoute',
+    getBuildingDetail: 'http://localhost:8082/building/',
+    getBuildingComment: 'http://localhost:8082/comment/building/'
+};
+const getBuildingCommentApi = async (buildingId) => {
+    return axios.get(URL.getBuildingComment+buildingId, {
+        headers: { 'Content-Type': 'application/json;charset=utf-8' }
+    });
 };
 
 const adminLoginApi = async (data) => {
@@ -14,10 +21,17 @@ const adminLoginApi = async (data) => {
     });
 };
 
+const getBuildingApi = async (id) => {
+    return axios.get(URL.getBuildingDetail+id,{
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
+        params: {id : id}
+    });
+}
+
 
 const userLoginApi = (data) => {
     return axios.post(URL.userLogin, data, {
-        headers: { 'Content-Type': 'application/json;charset=utf-8' }
+        headers: { 'Content-Type': 'application/json;charset=utf-8' },
     });
 };
 
@@ -48,5 +62,7 @@ export {
     userLoginApi,
     userRegisterApi,
     getAllBuildings,
-    getBusRoute
+    getBusRoute,
+    getBuildingApi,
+    getBuildingCommentApi
 };

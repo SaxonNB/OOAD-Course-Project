@@ -84,16 +84,16 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           userRegisterApi({
-            account: this.registerForm.account,
+            name: this.registerForm.account,
             password: this.registerForm.password,
-            checkPass: this.registerForm.password
+            type: 0
           }).then(() => {
             this.registerForm = {};
             this.$message({
               message: '注册成功!',
               type: "success"
             });
-            this.$router.push({path:'/login'})
+            this.$router.push({path:'/user/login'})
           }).catch(() => {
             this.$message({
               message: '注册失败!',

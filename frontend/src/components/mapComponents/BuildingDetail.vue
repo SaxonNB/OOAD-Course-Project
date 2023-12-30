@@ -8,7 +8,7 @@
           <div class="thing-infos-view">
             <div class="thing-infos">
               <div class="thing-img-box">
-                <img :src="buildingData.image"/>
+                <img :src="buildingData.coverPath"/>
               </div>
               <div class="thing-info-box">
                 <h1 class="thing-name">{{ buildingData.title }}</h1>
@@ -57,7 +57,7 @@
 
             <!--简介-->
             <div class="thing-intro" :class="selectTabIndex <= 0? '':'hide'">
-              <p class="text" style="">{{ buildingData.detail }}</p>
+              <p class="text" style="">{{ buildingData.details }}</p>
             </div>
 
             <!--评论-->
@@ -66,18 +66,18 @@
               <div class="publish flex-view">
                 <img :src="require('@/assets/avatar.jpg')" class="mine-img">
                 <input placeholder="说点什么..." class="content-input" ref="commentRef">
-                <button class="send-btn" @click="sendComment()">发送</button>
+                <button class="send-btn" @click="sendComment()" :disabled="!this.canComment">发送</button>
               </div>
               <div class="tab-view flex-view">
                 <div class="count-text">共有{{ commentData.length }}条评论</div>
               </div>
               <div class="comments-list">
-                <div class="comment-item" v-for="item in commentData">
+                <div class="comment-item" v-for="item in commentData" :key="item.id">
                   <div class="flex-item flex-view">
                     <img :src="require('@/assets/avatar.jpg')" class="avator">
                     <div class="person">
-                      <div class="name">{{ item.username }}</div>
-                      <div class="time">{{ item.commentTime }}</div>
+                      <div class="name">{{ item.commenterName }}</div>
+                      <div class="time">{{ item.stringTime }}</div>
                     </div>
                   </div>
                   <p class="comment-content">{{ item.content }}</p>
@@ -102,9 +102,10 @@
 </template>
 
 <script>
-import { message } from "ant-design-vue";
+// import { message } from "ant-design-vue";
 import MyFooter from "@/components/welcomeComponents/MyFooter.vue";
 import MyHeader from "@/components/welcomeComponents/MyHeader.vue";
+import {getBuildingApi, getBuildingCommentApi} from "@/api/user";
 
 export default {
   components: {
@@ -113,19 +114,20 @@ export default {
   },
   data() {
     return {
-      thingId: '',
-      detailData: {},
+      buildingId: '',
+      buildingData: {},
       tabUnderLeft: 6,
-      tabData: ['简介', '评论'],
+      tabData: ['介绍', '评论'],
       selectTabIndex: 0,
       commentData: [],
-      commentRef: null,
+      commentText: '',
+      commentImages: null,
+      canComment: false
     };
   },
   mounted() {
-    this.thingId = this.$route.query.id.trim();
-    this.getThingDetail();
-    this.getRecommendThing();
+    this.buildingId = this.$route.params.id;
+    // this.getThingDetail();
     this.getCommentList();
   },
   methods: {
@@ -133,87 +135,62 @@ export default {
       this.selectTabIndex = index;
       this.tabUnderLeft = 6 + 54 * index;
     },
-    getThingDetail() {
-      detailApi({id: thingId.value}).then(res => {
-        detailData.value = res.data
-        detailData.value.cover = BASE_URL + '/api/staticfiles/image/' + detailData.value.cover
-      }).catch(err => {
-        message.error('获取详情失败')
-      })
-    },
-    addToWish() {
-      let userId = userStore.user_id
-      if (userId) {
-        wishApi({thingId: thingId.value, userId: userId}).then(res => {
-          message.success(res.msg)
-          getThingDetail()
-        }).catch(err => {
-          console.log('操作失败')
-        })
-      } else {
-        message.warn('请先登录')
-      }
-    },
-    collect() {
-      let userId = userStore.user_id
-      if (userId) {
-        collectApi({thingId: thingId.value, userId: userId}).then(res => {
-          message.success(res.msg)
-          getThingDetail()
-        }).catch(err => {
-          console.log('收藏失败')
-        })
-      } else {
-        message.warn('请先登录')
-      }
+    async getThingDetail() {
+      // console.log(7777777)
+      // console.log(this.buildingId)
+      const result = await getBuildingApi(this.buildingId);
+      console.log(result.data)
+      this.buildingData = result.data;
     },
     share() {
       let content = '分享一个非常好玩的网站 ' + window.location.href
       let shareHref = 'http://service.weibo.com/share/share.php?title=' + content
       window.open(shareHref)
     },
-    getRecommendThing() {
-      listThingList({sort: 'recommend'}).then(res => {
-        res.data.forEach((item, index) => {
-          if (item.cover) {
-            item.cover = BASE_URL + '/api/staticfiles/image/' + item.cover
-          }
-        })
-        console.log(res)
-        recommendData.value = res.data.slice(0, 6)
-      }).catch(err => {
-        console.log(err)
-      })
+    // New method to handle image selection
+    handleImageChange(event) {
+      this.commentImages = event.target.files;
     },
-    sendComment() {
-      console.log(commentRef.value)
-      let text = commentRef.value.value.trim()
-      console.log(text)
-      if (text.length <= 0) {
-        return
+
+    // Updated sendComment method to include image data in the request
+    async sendComment() {
+      if (!localStorage.getItem("user_token")) {
+        this.commentText = "";
+        this.commentImages = null;
+        await this.$router.push('/user/login');
+        this.$message({
+          message: '请登录!',
+          type: "error"
+        });
+        return;
       }
-      commentRef.value.value = ''
-      let userId = userStore.user_id
-      if (userId) {
-        createCommentApi({content: text, thingId: thingId.value, userId: userId}).then(res => {
-          getCommentList()
-        }).catch(err => {
-          console.log(err)
-        })
-      } else {
-        message.warn('请先登录！')
-        router.push({name: 'login'})
+
+      const formData = new FormData();
+      formData.append("content", this.commentText);
+
+      // Add images to the FormData object
+      if (this.commentImages) {
+        for (let i = 0; i < this.commentImages.length; i++) {
+          formData.append("images", this.commentImages[i]);
+        }
+      }
+
+      try {
+        // Send POST request with FormData containing text and image data
+        const result = getBuildingCommentApi(this.buildingId);
+        // Handle the response as needed
+        console.log(result.data);
+        this.commentData = result.data;
+      } catch (error) {
+        // Handle error
+        console.error("Error sending comment:", error);
       }
     },
-    getCommentList() {
-      listThingCommentsApi({thingId: thingId.value, order: order.value}).then(res => {
-        res.data.forEach(item => {
-          item.commentTime = getFormatTime(item.commentTime, true)
-        })
-        commentData.value = res.data
-      }).catch(err => {
-        console.log(err)
-      })
+    async getCommentList() {
+      console.log('获取评论')
+      const result = await getBuildingCommentApi(this.buildingId);
+      console.log(result.data)
+      this.commentData = result.data;
     },
   },
 };
@@ -336,12 +313,12 @@ export default {
   .thing-name {
     line-height: 32px;
     margin: 16px 0;
-    color: #0F1111!important;
-    font-size: 15px!important;
-    font-weight: 400!important;
-    font-style: normal!important;
-    text-transform: none!important;
-    text-decoration: none!important;
+    color: #0F1111 !important;
+    font-size: 15px !important;
+    font-weight: 400 !important;
+    font-style: normal !important;
+    text-transform: none !important;
+    text-decoration: none !important;
   }
 
   .translators, .authors {
@@ -594,15 +571,16 @@ export default {
         //background: #f6f9fb;
         overflow: hidden;
         padding: 0 16px;
+
         .thing-name {
           line-height: 32px;
           margin-top: 12px;
-          color: #0F1111!important;
-          font-size: 15px!important;
-          font-weight: 400!important;
-          font-style: normal!important;
-          text-transform: none!important;
-          text-decoration: none!important;
+          color: #0F1111 !important;
+          font-size: 15px !important;
+          font-weight: 400 !important;
+          font-style: normal !important;
+          text-transform: none !important;
+          text-decoration: none !important;
         }
 
         .price {
@@ -815,9 +793,10 @@ export default {
   top: -0.5em;
   font-size: 12px;
 }
+
 .a-price {
   color: #0F1111;
-  font-size:26px;
+  font-size: 26px;
 }
 </style>
 
