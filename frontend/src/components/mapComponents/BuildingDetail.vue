@@ -59,14 +59,19 @@
             <div class="thing-intro" :class="selectTabIndex <= 0? '':'hide'">
               <p class="text" style="">{{ buildingData.details }}</p>
             </div>
-
             <!--评论-->
             <div class="thing-comment" :class="selectTabIndex > 0? '':'hide'">
               <div class="title">发表新的评论</div>
               <div class="publish flex-view">
                 <img :src="require('@/assets/avatar.jpg')" class="mine-img">
                 <input placeholder="说点什么..." class="content-input" ref="commentRef">
+                <div class="upload-button-container">
+                  <button class="send-btn" @click="openFileInput">选择图片</button>
+                  <input type="file" @change="handleFileChange" ref="fileInput" style="display: none">
+                </div>
                 <button class="send-btn" @click="sendComment()" :disabled="!this.canComment">发送</button>
+                <!-- 显示用户选择的图片 -->
+                <img v-if="selectedImage" :src="selectedImage" class="selected-image-preview" style="width: 100px; height: 100px"/>
               </div>
               <div class="tab-view flex-view">
                 <div class="count-text">共有{{ commentData.length }}条评论</div>
@@ -80,7 +85,11 @@
                       <div class="time">{{ item.stringTime }}</div>
                     </div>
                   </div>
+                  <div class="thing-img-box">
+                    <img :src="item.photos[0].path" style="width: 200px; height: 150px;"/>
+                  </div>
                   <p class="comment-content">{{ item.content }}</p>
+
                 </div>
                 <div class="infinite-loading-container">
                   <div class="infinite-status-prompt" style="">
@@ -105,7 +114,7 @@
 // import { message } from "ant-design-vue";
 import MyFooter from "@/components/welcomeComponents/MyFooter.vue";
 import MyHeader from "@/components/welcomeComponents/MyHeader.vue";
-import {getBuildingApi, getBuildingCommentApi} from "@/api/user";
+import {getBuildingApi, getBuildingCommentApi, sendCommentApi} from "@/api/user";
 
 export default {
   components: {
@@ -121,14 +130,20 @@ export default {
       selectTabIndex: 0,
       commentData: [],
       commentText: '',
-      commentImages: null,
+      selectedImage: null,
       canComment: false
     };
   },
   mounted() {
     this.buildingId = this.$route.params.id;
-    // this.getThingDetail();
+    this.getThingDetail();
     this.getCommentList();
+    console.log('rrr')
+    console.log('user_token')
+    if (localStorage.getItem('user_token')){
+      this.canComment = true;
+    }
+
   },
   methods: {
     selectTab(index) {
@@ -147,16 +162,26 @@ export default {
       let shareHref = 'http://service.weibo.com/share/share.php?title=' + content
       window.open(shareHref)
     },
-    // New method to handle image selection
-    handleImageChange(event) {
-      this.commentImages = event.target.files;
+    openFileInput() {
+      // 打开文件选择框
+      this.$refs.fileInput.click();
     },
 
+    handleFileChange() {
+      const fileInput = this.$refs.fileInput;
+      if (fileInput.files.length > 0) {
+        const selectedFile = fileInput.files[0];
+        this.selectedImage = URL.createObjectURL(selectedFile);
+      }
+      console.log(this.selectedImage);
+    },
     // Updated sendComment method to include image data in the request
     async sendComment() {
+      console.log('发送评论')
+      console.log(localStorage.getItem('user_token'))
       if (!localStorage.getItem("user_token")) {
         this.commentText = "";
-        this.commentImages = null;
+        this.selectedImage = null;
         await this.$router.push('/user/login');
         this.$message({
           message: '请登录!',
@@ -164,20 +189,22 @@ export default {
         });
         return;
       }
+      console.log('可以发表评论')
 
       const formData = new FormData();
       formData.append("content", this.commentText);
+      formData.append("commenterId", localStorage.getItem('user_id'))
+      formData.append("buildingId", this.buildingId)
 
-      // Add images to the FormData object
-      if (this.commentImages) {
-        for (let i = 0; i < this.commentImages.length; i++) {
-          formData.append("images", this.commentImages[i]);
-        }
+      // 添加上传的图片到 FormData 对象
+      if (this.selectedImage) {
+        const fileInput = this.$refs.fileInput;
+        formData.append("image", fileInput.files[0]);
       }
 
       try {
         // Send POST request with FormData containing text and image data
-        const result = getBuildingCommentApi(this.buildingId);
+        const result = sendCommentApi(formData);
         // Handle the response as needed
         console.log(result.data);
         this.commentData = result.data;

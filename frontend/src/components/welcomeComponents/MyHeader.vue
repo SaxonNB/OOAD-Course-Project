@@ -7,10 +7,10 @@
     <div class="user-info" v-if="userStore.user_token">
       <!-- 用户已登录 -->
       <div>{{ userStore.user_name }}</div>
-      <button @click="logout">退出</button>
+      <button class="send-btn" @click="logout">退出</button>
     </div>
     <div class="login-button" v-else>
-      <button @click="login">登录</button>
+      <button class="send-btn" @click="login">登录</button>
     </div>
   </div>
 </template>
@@ -24,6 +24,9 @@ export default {
   },
   methods: {
     logout() {
+      localStorage.removeItem('user_token');
+      localStorage.removeItem('user_id');
+      localStorage.removeItem('user_name')
       this.$store.dispatch('userLogout');
     },
     login(){
@@ -48,26 +51,43 @@ export default {
   display: flex;
   flex-direction: row;
   align-items: center;
-}
-
-.logo {
-  margin-right: auto; /* 将 Logo 推到左侧 */
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-
-  div {
-    margin-right: 80px;
+  .logo {
+    margin-right: auto; /* 将 Logo 推到左侧 */
+  }
+  .send-btn {
+    margin-left: 10px;
+    background: #4684e2;
+    border-radius: 4px;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 80px;
+    flex: 0 0 80px;
+    color: #fff;
+    font-size: 14px;
+    text-align: center;
+    height: 32px;
+    line-height: 32px;
+    outline: none;
+    border: 0px;
+    cursor: pointer;
   }
 
-  button {
-    margin-right: 50px; /* 将退出按钮推到最右侧 */
+  .user-info {
+    display: flex;
+    align-items: center;
+
+    div {
+      margin-right: 80px;
+    }
+
+    button {
+      margin-right: 50px; /* 将退出按钮推到最右侧 */
+    }
+  }
+
+  .login-button {
+    margin-right: 50px; /* 将登录按钮推到最右侧 */
   }
 }
 
-.login-button {
-  margin-right: 50px; /* 将登录按钮推到最右侧 */
-}
+
 </style>

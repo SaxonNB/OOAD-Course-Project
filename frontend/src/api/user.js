@@ -7,8 +7,17 @@ const URL = {
     getAllBuildings: 'http://localhost:8082/building/buildingCover',
     getBusRoute: 'http://localhost:8082/route/planRoute',
     getBuildingDetail: 'http://localhost:8082/building/',
-    getBuildingComment: 'http://localhost:8082/comment/building/'
+    getBuildingComment: 'http://localhost:8082/comment/building/',
+    sendComment: 'http://localhost:8082/comment/add'
 };
+
+const sendCommentApi = async (data) => {
+    return axios.post(URL.sendComment, data, {
+        headers: { 'Content-Type': 'application/json;charset=utf-8'
+            ,'token': `${localStorage.getItem('user_token')}`}
+    });
+};
+
 const getBuildingCommentApi = async (buildingId) => {
     return axios.get(URL.getBuildingComment+buildingId, {
         headers: { 'Content-Type': 'application/json;charset=utf-8' }
@@ -17,7 +26,8 @@ const getBuildingCommentApi = async (buildingId) => {
 
 const adminLoginApi = async (data) => {
     return axios.post(URL.adminLogin, data, {
-        headers: { 'Content-Type': 'application/json;charset=utf-8' ,'Authorization': `Bearer ${localStorage.getItem('admin_user_token')}`}
+        headers: { 'Content-Type': 'application/json;charset=utf-8'
+            ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 };
 
@@ -64,5 +74,6 @@ export {
     getAllBuildings,
     getBusRoute,
     getBuildingApi,
-    getBuildingCommentApi
+    getBuildingCommentApi,
+    sendCommentApi
 };
