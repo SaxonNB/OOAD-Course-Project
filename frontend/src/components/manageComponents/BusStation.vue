@@ -20,15 +20,15 @@
   
       <!-- 添加数据的弹窗 -->
       <el-dialog title="添加数据" :visible.sync="dialogVisible">
-        <el-form :model="formData" label-width="80px">
+        <el-form label-width="80px">
           <el-form-item label="名称" prop="name">
-            <el-input v-model="formData.name"></el-input>
+            <el-input v-model="this.name"></el-input>
           </el-form-item>
           <el-form-item label="纬度" prop="latitude">
-            <el-input v-model="formData.latitude"></el-input>
+            <el-input v-model="this.latitude"></el-input>
           </el-form-item>
           <el-form-item label="经度" prop="longitude">
-            <el-input v-model="formData.longitude"></el-input>
+            <el-input v-model="this.longitude"></el-input>
           </el-form-item>
         </el-form>
   
@@ -76,8 +76,12 @@
         editDialogVisible: false,
         dialogVisible: false,
         editedRowData: null, // 保存编辑的行数据
-        formData: {          // 保存添加的行数据
-        },
+
+          name:'',
+          latitude:'',
+          longitude:''
+          // 保存添加的行数据
+
       };
     },
     computed: {
@@ -136,19 +140,20 @@
       },
       // 新增代码：确认添加数据
       async handleAddConfirm() {
-  
-        await AddStations(this.formData);
+
+        console.log(name)
+        await AddStations({'name':this.name,'latitude':this.latitude,'longitude':this.longitude});
   
         this.tableData.push({
-          name: this.formData.name,
-          latitude: this.formData.latitude,
-          longitude: this.formData.longitude,
+          name: this.name,
+          latitude: this.latitude,
+          longitude: this.longitude,
         });
   
   
-        this.formData.name = '';
-        this.formData.latitude = '';
-        this.formData.longitude = '';
+        this.name = '';
+        this.latitude = '';
+        this.longitude = '';
   
         this.selectedFileUrl = '';
       },
