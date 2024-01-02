@@ -15,17 +15,17 @@ const getComments = () => {
     });
 }
 
-const BlockComments = (name) => {
+const BlockComments = (data) => {
     console.log(name)
-    return axios.post(URL.BlockComment, {name},{
+    return axios.post(URL.BlockComment, data,{
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
-const UnBlockComments = (name) => {
-    console.log(name)
-    return axios.post(URL.UnBlockComment, {name},{
+const UnBlockComments = (commentId) => {
+    console.log(commentId)
+    return axios.post(URL.UnBlockComment, commentId,{
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });

@@ -61,6 +61,7 @@ export default new Vuex.Store({
                     console.log('llllllllll')
                     localStorage.setItem(USER_TOKEN, result.data.token);
                     localStorage.setItem(USER_NAME, result.data.name);
+                    console.log(result.data.id)
                     localStorage.setItem(USER_ID, result.data.id);
                 }
                 return result;

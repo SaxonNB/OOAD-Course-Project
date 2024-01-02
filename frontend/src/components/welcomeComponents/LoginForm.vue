@@ -54,6 +54,10 @@ export default {
           await this.$router.push('/manage')
         }else {
           console.log(result)
+          this.$message({
+            message: '登陆失败!',
+            type: "error"
+          });
         }
       }else {
         const result = await this.$store.dispatch('userLogin',this.loginForm);
@@ -65,6 +69,10 @@ export default {
           await this.$router.push('/home')
         }else {
           console.log(result)
+          this.$message({
+            message: '登陆失败!',
+            type: "error"
+          });
         }
       }
     },

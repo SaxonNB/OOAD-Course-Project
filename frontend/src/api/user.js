@@ -13,7 +13,7 @@ const URL = {
 
 const sendCommentApi = async (data) => {
     return axios.post(URL.sendComment, data, {
-        headers: { 'Content-Type': 'application/json;charset=utf-8'
+        headers: { 'Content-Type': 'multipart/form-data;charset=utf-8'
             ,'token': `${localStorage.getItem('user_token')}`}
     });
 };
@@ -26,8 +26,7 @@ const getBuildingCommentApi = async (buildingId) => {
 
 const adminLoginApi = async (data) => {
     return axios.post(URL.adminLogin, data, {
-        headers: { 'Content-Type': 'application/json;charset=utf-8'
-            ,'token': `${localStorage.getItem('admin_user_token')}`}
+        headers: { 'Content-Type': 'application/json;charset=utf-8'}
     });
 };
 

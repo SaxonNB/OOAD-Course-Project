@@ -64,14 +64,15 @@
               <div class="title">发表新的评论</div>
               <div class="publish flex-view">
                 <img :src="require('@/assets/avatar.jpg')" class="mine-img">
-                <input placeholder="说点什么..." class="content-input" ref="commentRef">
+                <input v-model="commentText" placeholder="说点什么..." class="content-input" ref="commentRef">
                 <div class="upload-button-container">
-                  <button class="send-btn" @click="openFileInput">选择图片</button>
-                  <input type="file" @change="handleFileChange" ref="fileInput" style="display: none">
+                  <button class="send-btn">选择文件</button>
+                  <input type="file" @change="handleFileChange" class="file-input"/>
                 </div>
                 <button class="send-btn" @click="sendComment()" :disabled="!this.canComment">发送</button>
                 <!-- 显示用户选择的图片 -->
-                <img v-if="selectedImage" :src="selectedImage" class="selected-image-preview" style="width: 100px; height: 100px"/>
+                <img v-if="selectedImage" :src="selectedImage" class="selected-image-preview"
+                     style="width: 100px; height: 100px"/>
               </div>
               <div class="tab-view flex-view">
                 <div class="count-text">共有{{ commentData.length }}条评论</div>
@@ -85,7 +86,7 @@
                       <div class="time">{{ item.stringTime }}</div>
                     </div>
                   </div>
-                  <div class="thing-img-box">
+                  <div class="thing-img-box" v-if="item.photos && item.photos.length > 0">
                     <img :src="item.photos[0].path" style="width: 200px; height: 150px;"/>
                   </div>
                   <p class="comment-content">{{ item.content }}</p>
@@ -131,6 +132,7 @@ export default {
       commentData: [],
       commentText: '',
       selectedImage: null,
+      selectedImageUrl: null,
       canComment: false
     };
   },
@@ -140,7 +142,7 @@ export default {
     this.getCommentList();
     console.log('rrr')
     console.log('user_token')
-    if (localStorage.getItem('user_token')){
+    if (localStorage.getItem('user_token')) {
       this.canComment = true;
     }
 
@@ -162,17 +164,10 @@ export default {
       let shareHref = 'http://service.weibo.com/share/share.php?title=' + content
       window.open(shareHref)
     },
-    openFileInput() {
-      // 打开文件选择框
-      this.$refs.fileInput.click();
-    },
 
-    handleFileChange() {
-      const fileInput = this.$refs.fileInput;
-      if (fileInput.files.length > 0) {
-        const selectedFile = fileInput.files[0];
-        this.selectedImage = URL.createObjectURL(selectedFile);
-      }
+    handleFileChange(event) {
+      this.selectedImage = event.target.files[0];
+      this.selectedImageUrl = URL.createObjectURL(this.selectedImage);
       console.log(this.selectedImage);
     },
     // Updated sendComment method to include image data in the request
@@ -182,6 +177,7 @@ export default {
       if (!localStorage.getItem("user_token")) {
         this.commentText = "";
         this.selectedImage = null;
+        this.selectedImageUrl = null;
         await this.$router.push('/user/login');
         this.$message({
           message: '请登录!',
@@ -192,15 +188,17 @@ export default {
       console.log('可以发表评论')
 
       const formData = new FormData();
-      formData.append("content", this.commentText);
-      formData.append("commenterId", localStorage.getItem('user_id'))
-      formData.append("buildingId", this.buildingId)
+      formData.append('content', this.commentText);
+      console.log('content is' + this.commentText)
+      formData.append('commenterId', localStorage.getItem('user_id'))
+      formData.append('buildingId', this.buildingId)
 
       // 添加上传的图片到 FormData 对象
       if (this.selectedImage) {
-        const fileInput = this.$refs.fileInput;
-        formData.append("image", fileInput.files[0]);
+        formData.append("image", this.selectedImage, this.selectedImage.name);
       }
+      console.log(formData)
+      console.log(formData.values())
 
       try {
         // Send POST request with FormData containing text and image data
@@ -211,6 +209,10 @@ export default {
       } catch (error) {
         // Handle error
         console.error("Error sending comment:", error);
+      } finally {
+        this.commentText = "";
+        this.selectedImage = null;
+        this.selectedImageUrl = null;
       }
     },
     async getCommentList() {
@@ -694,6 +696,14 @@ export default {
       outline: none;
       border: 0px;
       cursor: pointer;
+    }
+    .file-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0; /* 设置透明度为0，隐藏原生文件输入框 */
+      width: 100%;
+      height: 100%;
     }
   }
 
