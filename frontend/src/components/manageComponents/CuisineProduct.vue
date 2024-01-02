@@ -3,6 +3,12 @@
     <el-table :data="currentTableData" style="width: 100%">
       <el-table-column label="名称" prop="name"></el-table-column>
       <el-table-column label="价格" prop="price"></el-table-column>
+      <el-table-column label="数量" prop="quantity"></el-table-column>
+      <el-table-column label="图片">
+        <template slot-scope="scope">
+          <img v-if="scope.row.image" :src="scope.row.image" alt="Product Image" style="max-width: 50px; max-height: 50px;">
+        </template>
+      </el-table-column>
       <el-table-column>
         <template slot-scope="scope">
           <!-- 添加编辑按钮 -->
@@ -26,6 +32,9 @@
         </el-form-item>
         <el-form-item label="价格" prop="price">
           <el-input v-model="formData.price"></el-input>
+        </el-form-item>
+        <el-form-item label="数量" prop="quantity">
+          <el-input v-model="formData.quantity"></el-input>
         </el-form-item>
         <el-form-item label="上传图片" style="position: relative;">
           <input type="file" @change="handleFileUpload"
@@ -76,7 +85,12 @@ export default {
       editDialogVisible: false,
       dialogVisible: false,
       editedRowData: null, // 保存编辑的行数据
-      formData: {          // 保存添加的行数据
+      formData: {
+        // 保存添加的行数据
+        name: '',
+        price: '',
+        quantity: '', // 新增数量属性
+        image: null, // 新增图片属性
       },
       selectedFile: null,
       selectedFileUrl: '', // 添加用于存储数据 URL 的属性
@@ -97,7 +111,7 @@ export default {
       const transformedData = responseData.map(item => {
         if (Array.isArray(item)) {
           // 如果是数组，转换为对象
-          return { name: item[0], price: item[1]};
+          return { name: item[0], price: item[1], quantity: item[2], image: item[3]};
         } else {
           // 如果是对象，直接返回
           return item;
@@ -138,13 +152,13 @@ export default {
     },
     // 新增代码：确认添加数据
     async handleAddConfirm() {
-
-      const formData = new FormData();
       // 将其他表单项数据加入 FormData
 
+      const formData = new FormData();
       formData.append('name', this.formData.name);
       formData.append('price', this.formData.price);
-
+      formData.append('quantity', this.formData.quantity); // 添加数量
+      formData.append('image', this.selectedFile); // 添加图片
       console.log(formData);
 
       await AddCuisines(formData);

@@ -3,6 +3,12 @@
     <el-table :data="currentTableData" style="width: 100%">
       <el-table-column label="名称" prop="name"></el-table-column>
       <el-table-column label="价格" prop="price"></el-table-column>
+      <el-table-column label="数量" prop="quantity"></el-table-column>
+      <el-table-column label="图片">
+        <template slot-scope="scope">
+          <img v-if="scope.row.image" :src="scope.row.image" alt="Product Image" style="max-width: 50px; max-height: 50px;">
+        </template>
+      </el-table-column>
       <el-table-column>
         <template slot-scope="scope">
           <!-- 添加编辑按钮 -->
@@ -13,8 +19,8 @@
     </el-table>
 
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-      :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
-      :total="tableData.length" />
+                   :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+                   :total="tableData.length" />
 
     <el-button type="primary" @click="dialogVisible = true">添加数据</el-button>
 
@@ -27,11 +33,14 @@
         <el-form-item label="价格" prop="price">
           <el-input v-model="formData.price"></el-input>
         </el-form-item>
+        <el-form-item label="数量" prop="quantity">
+          <el-input v-model="formData.quantity"></el-input>
+        </el-form-item>
         <el-form-item label="上传图片" style="position: relative;">
           <input type="file" @change="handleFileUpload"
-            style="position: absolute; top: 0; left: 0; opacity: 100; width: 100%; height: 100%;" />
+                 style="position: absolute; top: 0; left: 0; opacity: 100; width: 100%; height: 100%;" />
           <img v-if="selectedFileUrl" :src="selectedFileUrl" alt="Selected Image"
-            style="max-width: 100%; max-height: 200px; margin-top: 10px; box-sizing: border-box; border: 1px solid #ccc; padding: 5px;" />
+               style="max-width: 100%; max-height: 200px; margin-top: 10px; box-sizing: border-box; border: 1px solid #ccc; padding: 5px;" />
         </el-form-item>
       </el-form>
 
@@ -64,9 +73,9 @@
 
 <script>
 // import axios from 'axios';
-import {   AllProducts,EditProducts,AddProducts, } from '@/api/product';
+import { AllCuisines, EditCuisines, AddCuisines, } from '@/api/cuisine';
 export default {
-  name: "CuturalProduct",
+  name: "CuisineProduct",
   data() {
     return {
       tableData: [
@@ -76,7 +85,12 @@ export default {
       editDialogVisible: false,
       dialogVisible: false,
       editedRowData: null, // 保存编辑的行数据
-      formData: {          // 保存添加的行数据
+      formData: {
+        // 保存添加的行数据
+        name: '',
+        price: '',
+        quantity: '', // 新增数量属性
+        image: null, // 新增图片属性
       },
       selectedFile: null,
       selectedFileUrl: '', // 添加用于存储数据 URL 的属性
@@ -92,12 +106,12 @@ export default {
   },
   methods: {
     async fetchData() {
-      const responseData = (await AllProducts()).data;
+      const responseData = (await AllCuisines()).data;
       // 将响应式对象转换为普通 JavaScript 对象
       const transformedData = responseData.map(item => {
         if (Array.isArray(item)) {
           // 如果是数组，转换为对象
-          return { name: item[0], price: item[1]};
+          return { name: item[0], price: item[1], quantity: item[2], image: item[3]};
         } else {
           // 如果是对象，直接返回
           return item;
@@ -123,7 +137,7 @@ export default {
       // 在这里保存编辑后的数据，可以发起请求等操作
       console.log(this.editedRowData);
 
-      await EditProducts(this.editedRowData);
+      await EditCuisines(this.editedRowData);
 
       // 找到要替换的行的索引
       const index = this.tableData.findIndex(item => item.id === this.editedRowData.id);
@@ -138,16 +152,16 @@ export default {
     },
     // 新增代码：确认添加数据
     async handleAddConfirm() {
-
-      const formData = new FormData();
       // 将其他表单项数据加入 FormData
 
+      const formData = new FormData();
       formData.append('name', this.formData.name);
       formData.append('price', this.formData.price);
-
+      formData.append('quantity', this.formData.quantity); // 添加数量
+      formData.append('image', this.selectedFile); // 添加图片
       console.log(formData);
 
-      await AddProducts(formData);
+      await AddCuisines(formData);
 
       this.tableData.push({
         name: this.formData.name,
