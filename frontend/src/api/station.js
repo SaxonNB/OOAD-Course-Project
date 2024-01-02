@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const URL = {
     AllStation: 'http://localhost:8082/station/',
-    EditStation: 'http://localhost:8082/station/',
+    EditStation: 'http://localhost:8082/station/edit',
     AddStation: 'http://localhost:8082/station/add',
 };
 
