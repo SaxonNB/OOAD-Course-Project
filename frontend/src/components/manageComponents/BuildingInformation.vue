@@ -139,6 +139,8 @@ export default {
   methods: {
     async fetchData() {
       const responseData = (await AllBuildings()).data;
+      console.log('11')
+      console.log(responseData)
       // 将响应式对象转换为普通 JavaScript 对象
       const transformedData = responseData.map(item => {
         if (Array.isArray(item)) {

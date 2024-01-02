@@ -14,7 +14,7 @@ const AllBuildings = () => {
 }
 
 const EditBuildings = (data) => {
-    return axios.post(URL.EditBuilding, {data},{
+    return axios.post(URL.EditBuilding, data,{
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });

@@ -124,13 +124,28 @@ export default {
     async handleBatchAddConfirm() {
       // 批量添加逻辑
       const validData = this.batchFormData.filter(data => data.name && data.password && data.property);
-
-      await addUser(validData);
+      const validData1 = this.batchFormData.filter(data => data.name && data.password);
+      console.log('--------------------------------------------------')
+      console.log(validData)
+      const result = await addUser(validData1);
+      const successUsers = result.data;
+      console.log('qqq')
+      console.log(successUsers)
       // 遍历批量数据，调用注册用户的接口
       validData.forEach(async userData => {
         try {
-          this.tableData.push(userData);
-          console.log(`用户 ${userData.name} 注册成功`);
+          console.log(userData.name)
+          console.log(successUsers)
+          if (successUsers.includes(userData.name)){
+            this.tableData.push(userData);
+            console.log(`用户 ${userData.name} 注册成功`);
+          }else {
+            this.$message({
+              message: userData.name+'注册失败',
+              type: "error"
+            });
+          }
+
         } catch (error) {
           console.error(`用户 ${userData.name} 注册失败:`, error);
         }

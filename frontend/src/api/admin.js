@@ -4,7 +4,7 @@ const URL = {
     AllUser: 'http://localhost:8082/user/allusers',
     BlockUser: 'http://localhost:8082/user/mute',
     UnBlockUser: 'http://localhost:8082/user/unmute',
-    AddUser: 'http://localhost:8082/user/',
+    AddUser: 'http://localhost:8082/user/batchregister',
 };
 
 const getAllUsers = () => {
@@ -34,7 +34,7 @@ const unblockUser = (name) => {
 
 const addUser = (data) => {
     console.log(data)
-    return axios.post(URL.AddUser, {data},{
+    return axios.post(URL.AddUser, data,{
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
