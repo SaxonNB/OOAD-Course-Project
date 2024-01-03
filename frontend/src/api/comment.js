@@ -15,9 +15,8 @@ const getComments = () => {
     });
 }
 
-const BlockComments = (data) => {
-    console.log(name)
-    return axios.post(URL.BlockComment, data,{
+const BlockComments = (commentId) => {
+    return axios.post(URL.BlockComment, commentId,{
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
