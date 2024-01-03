@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const URL = {
     AllRoute: 'http://localhost:8082/route/',
-    EditRoute: 'http://localhost:8082/route',
-    AddRoute: 'http://localhost:8082/route',
+    EditRoute: 'http://localhost:8082/route/edit',
+    AddRoute: 'http://localhost:8082/route/add',
     AllStation: 'http://localhost:8082/station/'
 };
 
@@ -15,15 +15,15 @@ const AllRoutes = () => {
 }
 
 const EditRoutes = (data) => {
-    return axios.post(URL.EditRoute, {data},{
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
+    return axios.post(URL.EditRoute, data,{
+        headers: { 'Content-Type': 'application/json'
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
 const AddRoutes = (data) => {
-    return axios.post(URL.AddRoute, {data},{
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
+    return axios.post(URL.AddRoute, data,{
+        headers: { 'Content-Type': 'application/json'
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
