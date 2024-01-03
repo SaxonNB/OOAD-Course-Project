@@ -18,6 +18,7 @@ import CreativeProduct from "@/components/welcomeComponents/CreativeProduct.vue"
 import CreativeList from "@/components/welcomeComponents/CreativeList.vue";
 import BuildingDetail from "@/components/mapComponents/BuildingDetail.vue";
 import FoodRecord from "@/components/welcomeComponents/FoodRecord.vue";
+import DataStatistics from "@/components/manageComponents/DataStatistics.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -35,10 +36,6 @@ const routes = [
         path: '/manage',
         component: ManagePage,
         children: [
-            {
-                path: '',
-                redirect: 'UserInformation'
-            },
             { path: 'UserInformation', component: UserInformation },
             { path: 'BuildingInformation', component: BuildingInformation },
             { path: 'CuisineProduct', component: CuisineProduct },
@@ -46,13 +43,40 @@ const routes = [
             { path: 'BusRoute', component: BusRoute },
             { path: 'BusStation', component: BusStation },
             { path: 'UserComment', component: UserComment },
+            { path: 'DataStatistics', component: DataStatistics}
         ]
     },
     {path: '/building', component: BuildingStatus},
     {path: '/comments', component: CommentAreas},
-    {path:'/restaurant-reservation',component: RestaurantReservation},
+    {
+        path: "/restaurant-reservation",
+        component: RestaurantReservation,
+        beforeEnter: (to, from, next) => {
+            // Assuming you have some authentication logic or a store to check if the user is logged in
+            if (localStorage.getItem('user_token')) {
+                // User is logged in, proceed to the restaurant reservation page
+                next();
+            } else {
+                // User is not logged in, redirect to the login page
+                next('/user/login'); // Adjust the path to your actual login page
+            }
+        },
+    },
     {path:'/restaurant-reservation/record', component: FoodRecord},
-    {path:'/creative-products',component: CreativeProduct},
+    {
+        path:'/creative-products',
+        component: CreativeProduct,
+        beforeEnter: (to, from, next) => {
+            // Assuming you have some authentication logic or a store to check if the user is logged in
+            if (localStorage.getItem('user_token')) {
+                // User is logged in, proceed to the restaurant reservation page
+                next();
+            } else {
+                // User is not logged in, redirect to the login page
+                next('/user/login'); // Adjust the path to your actual login page
+            }
+        },
+    },
     {path:'/creative-products/creative-list', component: CreativeList},
 
 ]
