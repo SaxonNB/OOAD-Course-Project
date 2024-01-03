@@ -110,6 +110,7 @@ export default {
       this.editDialogVisible = true;
     },
     async saveEditedData() {
+      console.log(this.editedRowData)
       await EditRoutes(this.editedRowData);
       const index = this.tableData.findIndex(item => item.id === this.editedRowData.id);
       if (index !== -1) {
@@ -123,6 +124,8 @@ export default {
         name,
         stations: selectedStations.map(stationId => this.allStations.find(station => station.id === stationId)),
       };
+
+      console.log(route);
 
       await AddRoutes(route);
       this.tableData.push(route);
