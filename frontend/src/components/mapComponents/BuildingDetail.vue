@@ -697,14 +697,22 @@ export default {
       border: 0px;
       cursor: pointer;
     }
+    .upload-button-container {
+      position: relative; /* 添加相对定位 */
+      width: 100px; /* 根据实际需求设置合适的宽度 */
+      height: 40px; /* 根据实际需求设置合适的高度 */
+    }
+
     .file-input {
       position: absolute;
       top: 0;
       left: 0;
-      opacity: 0; /* 设置透明度为0，隐藏原生文件输入框 */
-      width: 100%;
-      height: 100%;
+      width: 100%; /* 覆盖整个按钮区域 */
+      height: 100%; /* 覆盖整个按钮区域 */
+      opacity: 0; /* 隐藏原生文件输入框 */
+      cursor: pointer; /* 可选，设置鼠标样式为指针 */
     }
+
   }
 
   .tab-view {
