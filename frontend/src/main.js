@@ -10,6 +10,8 @@ import router from './router'
 import axios from "axios";
 import VueAxios from "vue-axios"
 import store from "@/store/store";
+import echarts from 'echarts';
+Vue.prototype.$echarts = echarts;
 Vue.config.productionTip = false
 Vue.use(Vuex)
 Vue.use(VueRouter)
