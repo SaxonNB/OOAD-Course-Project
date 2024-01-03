@@ -1,13 +1,27 @@
 // store.js
 import Vue from 'vue';
 import Vuex from 'vuex';
-import {adminLoginApi, userLoginApi} from '@/api/user';
-import {ADMIN_USER_ID, ADMIN_USER_NAME, ADMIN_USER_TOKEN, USER_ID, USER_NAME, USER_TOKEN} from "@/store/constants";
+import { adminLoginApi, userLoginApi } from '@/api/user';
+import { ADMIN_USER_ID, ADMIN_USER_NAME, ADMIN_USER_TOKEN, USER_ID, USER_NAME, USER_TOKEN } from "@/store/constants";
 
 Vue.use(Vuex);
+
+// 检查本地存储是否有用户信息
+const checkLocalUser = () => {
+    const userToken = localStorage.getItem(USER_TOKEN);
+    const userName = localStorage.getItem(USER_NAME);
+    const userId = localStorage.getItem(USER_ID);
+
+    if (userToken && userName && userId) {
+        return { token: userToken, name: userName, id: userId };
+    }
+
+    return null;
+};
+
 export default new Vuex.Store({
     state: {
-        originalPage: null, // 用于存储用户登录前的页面路径
+        originalPage: null,
         user_id: undefined,
         user_name: undefined,
         user_token: undefined,
@@ -15,32 +29,26 @@ export default new Vuex.Store({
         admin_user_id: undefined,
         admin_user_name: undefined,
         admin_user_token: undefined,
-        // 其他状态
     },
     mutations: {
         setOriginalPage(state, path) {
             state.originalPage = path;
         },
-        // 其他 mutations
-        // 用户登录 mutation
         userLogin(state, userData) {
             state.user_id = userData.id;
             state.user_name = userData.name;
             state.user_token = userData.token;
         },
-        // 用户登出 mutation
         userLogout(state) {
             state.user_id = undefined;
             state.user_name = undefined;
             state.user_token = undefined;
         },
-        // 管理员登录 mutation
         adminLogin(state, adminData) {
             state.admin_user_id = adminData.id;
             state.admin_user_name = adminData.name;
             state.admin_user_token = adminData.token;
         },
-        // 管理员登出 mutation
         adminLogout(state) {
             state.admin_user_id = undefined;
             state.admin_user_name = undefined;
@@ -48,46 +56,37 @@ export default new Vuex.Store({
         },
     },
     actions: {
-        // 可以定义 actions
-        // 用户登录 action
         async userLogin({ commit }, loginForm) {
             try {
                 const result = await userLoginApi(loginForm);
-                console.log('cccccccc')
-                console.log(result)
                 if (result.status === 200) {
                     commit('userLogin', result.data);
-                    console.log(result.data)
-                    console.log('llllllllll')
                     localStorage.setItem(USER_TOKEN, result.data.token);
                     localStorage.setItem(USER_NAME, result.data.name);
-                    console.log(result.data.id)
                     localStorage.setItem(USER_ID, result.data.id);
                 }
                 return result;
             } catch (error) {
-                // 处理错误，可以打印错误信息或者返回特定的错误状态
                 console.error('Error in userLogin action:', error);
                 return { code: 500, message: 'Internal Server Error' };
             }
         },
-
-        userLogout({commit}){
-            commit('userLogout')
+        userLogout({ commit }) {
+            commit('userLogout');
+            localStorage.removeItem(USER_TOKEN);
+            localStorage.removeItem(USER_NAME);
+            localStorage.removeItem(USER_ID);
         },
-        adminLogout({commit}){
-            commit('adminLogout')
+        adminLogout({ commit }) {
+            commit('adminLogout');
+            localStorage.removeItem(ADMIN_USER_TOKEN);
+            localStorage.removeItem(ADMIN_USER_NAME);
+            localStorage.removeItem(ADMIN_USER_ID);
         },
-
-        // 管理员登录 action
         async adminLogin({ commit }, loginForm) {
             try {
                 const result = await adminLoginApi(loginForm);
-                console.log('zzzzz')
-                console.log(result)
-                // console.log(result.status)
                 if (result.status === 200) {
-                    console.log('登陆成功')
                     commit('adminLogin', result.data);
                     localStorage.setItem(ADMIN_USER_TOKEN, result.data.token);
                     localStorage.setItem(ADMIN_USER_NAME, result.data.name);
@@ -95,14 +94,17 @@ export default new Vuex.Store({
                 }
                 return result;
             } catch (error) {
-                // 处理错误，可以打印错误信息或者返回特定的错误状态
                 console.error('Error in adminLogin action:', error);
                 return { code: 500, message: 'Internal Server Error' };
             }
         },
-
     },
-    getters: {
-        // 可以定义 getters
-    },
+    getters: {},
+    // 在创建实例时检查本地存储
+    plugins: [store => {
+        const localUser = checkLocalUser();
+        if (localUser) {
+            store.commit('userLogin', localUser);
+        }
+    }],
 });

@@ -187,6 +187,7 @@ export default {
     async handleDelete(index) {
       this.tableData.splice(index, 1);
       //这里要加像后端发送的代码
+
     },
   },
   mounted() {

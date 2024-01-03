@@ -55,7 +55,7 @@ export default {
     margin-right: auto; /* 将 Logo 推到左侧 */
   }
   .send-btn {
-    margin-left: 10px;
+    margin-right: 150px;
     background: #4684e2;
     border-radius: 4px;
     -webkit-box-flex: 0;
@@ -76,11 +76,11 @@ export default {
     align-items: center;
 
     div {
-      margin-right: 80px;
+      margin-right: 200px;
     }
 
     button {
-      margin-right: 50px; /* 将退出按钮推到最右侧 */
+      margin-right: 200px; /* 将退出按钮推到最右侧 */
     }
   }
 
