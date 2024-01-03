@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const URL = {
     AllCuisine: 'http://localhost:8082/store/cuisine',
-    EditCuisine: 'http://localhost:8082/store/edit/1',
+    EditCuisine: 'http://localhost:8082/store/edit',
     AddCuisine: 'http://localhost:8082/store/addGood/1',
     DeleteCuisine: 'http://localhost:8082/store/goods/delete',
 };
@@ -16,14 +16,14 @@ const AllCuisines = () => {
 
 const EditCuisines = (data) => {
     return axios.post(URL.EditCuisine, data,{
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
+        headers: { 'Content-Type': 'multipart/form-data'
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
 const AddCuisines = (data) => {
     return axios.post(URL.AddCuisine, data,{
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
+        headers: { 'Content-Type': 'multipart/form-data'
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }

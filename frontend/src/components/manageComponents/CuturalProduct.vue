@@ -76,7 +76,8 @@
 
 <script>
 // import axios from 'axios';
-import { AllCuisines, EditCuisines, AddCuisines, } from '@/api/cuisine';
+import { AllCuisines, EditCuisines, AddCuisines, } from '@/api/product';
+import {DeleteCuisine} from "@/api/cuisine";
 export default {
   name: "CuisineProduct",
   data() {
@@ -185,8 +186,22 @@ export default {
       this.selectedFileUrl = URL.createObjectURL(this.selectedFile);
     },
     async handleDelete(index) {
-      this.tableData.splice(index, 1);
-      //这里要加像后端发送的代码
+      const idToDelete = this.tableData[index].id;
+      console.log(idToDelete)
+      const result = await DeleteCuisine(idToDelete);
+      if (result.status === 200){
+        this.$message({
+          message: '删除成功!',
+          type: "success"
+        });
+        this.tableData.splice(index, 1);
+      }else {
+        this.$message({
+          message: '删除失败!',
+          type: "error"
+        });
+      }
+
     },
   },
   mounted() {

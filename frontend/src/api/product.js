@@ -1,44 +1,44 @@
 import axios from 'axios';
 
 const URL = {
-    AllProduct: 'http://localhost:8082/store/product/',
-    EditProduct: 'http://localhost:8082/store/product/edit',
-    AddProduct: 'http://localhost:8082/store/product/add',
-    DeleteProduct: 'http://localhost:8082/store/goods/delete',
+    AllCuisine: 'http://localhost:8082/store/product',
+    EditCuisine: 'http://localhost:8082/store/edit',
+    AddCuisine: 'http://localhost:8082/store/addGood/2',
+    DeleteCuisine: 'http://localhost:8082/store/goods/delete',
 };
 
-const AllProducts = () => {
-    return axios.get(URL.AllProduct, {
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
-        ,'token': `${localStorage.getItem('admin_user_token')}`}
+const AllCuisines = () => {
+    return axios.get(URL.AllCuisine, {
+        headers: { 'Content-Type': 'application/json;charset=utf-8'
+            ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
-const EditProducts = (data) => {
-    return axios.post(URL.EditProduct, {data},{
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
-        ,'token': `${localStorage.getItem('admin_user_token')}`}
+const EditCuisines = (data) => {
+    return axios.post(URL.EditCuisine, data,{
+        headers: { 'Content-Type': 'multipart/form-data'
+            ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
-const AddProducts = (data) => {
-    return axios.post(URL.AddProduct, {data},{
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
-        ,'token': `${localStorage.getItem('admin_user_token')}`}
+const AddCuisines = (data) => {
+    return axios.post(URL.AddCuisine, data,{
+        headers: { 'Content-Type': 'multipart/form-data'
+            ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
-const DeleteProducts = (name) => {
-    return axios.post(URL.DeleteProduct, {name},{
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
-        ,'token': `${localStorage.getItem('admin_user_token')}`}
+const DeleteCuisine = (id) => {
+    return axios.post(URL.DeleteCuisine, id,{
+        headers: { 'Content-Type': 'application/json;charset=utf-8'
+            ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
 
 export {
-    AllProducts,
-    EditProducts,
-    AddProducts,
-    DeleteProducts,
+    AllCuisines,
+    EditCuisines,
+    AddCuisines,
+    DeleteCuisine,
 };
