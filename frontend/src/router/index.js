@@ -14,10 +14,10 @@ import UserComment from '../components/manageComponents/UserComment.vue';
 import BuildingStatus from "@/components/welcomeComponents/BuildingStatus.vue";
 import RestaurantReservation from "@/components/welcomeComponents/RestaurantReservation.vue";
 import CommentAreas from "@/components/welcomeComponents/CommentAreas.vue";
-import ShoppingList from "@/components/welcomeComponents/ShoppingList.vue";
 import CreativeProduct from "@/components/welcomeComponents/CreativeProduct.vue";
 import CreativeList from "@/components/welcomeComponents/CreativeList.vue";
 import BuildingDetail from "@/components/mapComponents/BuildingDetail.vue";
+import FoodRecord from "@/components/welcomeComponents/FoodRecord.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -51,7 +51,7 @@ const routes = [
     {path: '/building', component: BuildingStatus},
     {path: '/comments', component: CommentAreas},
     {path:'/restaurant-reservation',component: RestaurantReservation},
-    {path:'/restaurant-reservation/shoppingList', component: ShoppingList},
+    {path:'/restaurant-reservation/record', component: FoodRecord},
     {path:'/creative-products',component: CreativeProduct},
     {path:'/creative-products/creative-list', component: CreativeList},
 
