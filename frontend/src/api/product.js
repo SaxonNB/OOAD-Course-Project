@@ -1,10 +1,10 @@
 import axios from 'axios';
 
 const URL = {
-    AllProduct: 'http://localhost:8082/goods/',
-    EditProduct: 'http://localhost:8082/goods/',
-    AddProduct: 'http://localhost:8082/goods/',
-    DeleteProduct: 'http://localhost:8082/goods/',
+    AllProduct: 'http://localhost:8082/store/product/',
+    EditProduct: 'http://localhost:8082/store/product/edit',
+    AddProduct: 'http://localhost:8082/store/product/add',
+    DeleteProduct: 'http://localhost:8082/store/product/delete',
 };
 
 const AllProducts = () => {

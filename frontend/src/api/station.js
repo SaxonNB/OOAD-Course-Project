@@ -7,7 +7,8 @@ const URL = {
 };
 
 const AllStations = () => {
-    return axios.get(URL.AllStation, {
+    return axios.
+    get(URL.AllStation, {
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
