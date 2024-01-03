@@ -4,6 +4,7 @@ const URL = {
     AllRoute: 'http://localhost:8082/route/',
     EditRoute: 'http://localhost:8082/route',
     AddRoute: 'http://localhost:8082/route',
+    AllStation: 'http://localhost:8082/station/'
 };
 
 const AllRoutes = () => {
@@ -27,9 +28,17 @@ const AddRoutes = (data) => {
     });
 }
 
+const getAllStation = () => {
+    return axios.get(URL.AllStation, {
+        headers: { 'Content-Type': 'application/json;charset=utf-8'}
+    });
+}
+
+
 
 export {
     AllRoutes,
     EditRoutes,
     AddRoutes,
+    getAllStation
 };
