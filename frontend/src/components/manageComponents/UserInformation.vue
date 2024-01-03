@@ -75,7 +75,7 @@ export default {
       const transformedData = responseData.map(item => {
         if (Array.isArray(item)) {
           // 如果是数组，转换为对象
-          return { name: item[0], password: item[1], property: item[2] };
+          return { name: item[0], password: item[1], property: item[2] , isBlocked: item[2]==='MUTED'};
         } else {
           // 如果是对象，直接返回
           return item;
