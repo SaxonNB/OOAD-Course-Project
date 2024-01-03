@@ -19,8 +19,7 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <!-- 使用 v-if 来判断显示的文本 -->
-          <el-switch v-if="scope.row.status === 'APPROVE'" v-model="scope.row.commentStatus" :active-text="'通过'" :inactive-text="'不通过'" @change="handleBlock(scope.row)"/>
-          <el-switch v-else v-model="scope.row.commentStatus" :active-text="'通过'" :inactive-text="'不通过'" @change="handleBlock(scope.row)"/>
+          <el-switch v-model="scope.row.commentStatus" :active-text="'通过'" :inactive-text="'不通过'" @change="handleBlock(scope.row)"/>
         </template>
       </el-table-column>
     </el-table>
@@ -63,18 +62,22 @@ export default {
       this.tableData = responseData.map(comment => {
         return {
           ...comment,
-          commentStatus: comment.status === 'APPROVE' ? '通过' : '不通过',
+          commentStatus: comment.status === 'APPROVED',
         };
       });
+      console.log("yyy")
+      console.log(this.tableData)
     },
     async handleBlock(comment) {
       try {
-        if (comment.status === 'APPROVE') {
+        if (comment.commentStatus === false) {
+          console.log('开始禁止评论')
           await BlockComments(comment.id);
-          console.log('拉黑成功');
+          console.log('禁止成功');
         } else {
+          console.log('开始通过评论')
           await UnBlockComments(comment.id);
-          console.log('取消拉黑成功');
+          console.log('通过评论成功');
         }
       } catch (error) {
         console.error('操作失败:', error);

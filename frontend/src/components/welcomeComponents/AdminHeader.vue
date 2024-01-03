@@ -32,7 +32,7 @@ export default {
     },
     login(){
       this.$router.push("/user/login");
-    }
+    },
   },
 };
 </script>

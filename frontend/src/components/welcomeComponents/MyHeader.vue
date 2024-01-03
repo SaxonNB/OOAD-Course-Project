@@ -2,7 +2,7 @@
 <template>
   <div class="my-header">
     <div class="logo">
-      <img src="../../assets/SustechLogo.png" alt="Logo">
+      <img src="../../assets/SustechLogo.png" @click="goHome" alt="Logo">
     </div>
     <div class="user-info" v-if="userStore.user_token">
       <!-- 用户已登录 -->
@@ -31,6 +31,11 @@ export default {
     },
     login(){
       this.$router.push("/user/login");
+    },
+    goHome(){
+      if (this.$route.path !== '/home') {
+        this.$router.push('/home');
+      }
     }
   },
 };
