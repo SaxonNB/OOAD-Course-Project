@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-table :data="currentTableData" style="width: 100%">
-      <el-table-column label="名称" prop="name"></el-table-column>
+      <el-table-column label="名称" prop="routeName"></el-table-column>
       <el-table-column label="车站" prop="stations">
         <template slot-scope="scope">
           <ul>
@@ -92,7 +92,9 @@ export default {
   methods: {
     async fetchData() {
       this.tableData = (await AllRoutes()).data;
+      console.log(this.tableData);
       this.allStations = (await AllStations()).data;
+      console.log(this.allStations);
     },
     handleSizeChange(size) {
       this.pageSize = size;

@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const URL = {
-    AllRoute: 'http://localhost:8082/goods/',
-    EditRoute: 'http://localhost:8082/goods/',
-    AddRoute: 'http://localhost:8082/goods/',
+    AllRoute: 'http://localhost:8082/route/',
+    EditRoute: 'http://localhost:8082/route',
+    AddRoute: 'http://localhost:8082/route',
 };
 
 const AllRoutes = () => {

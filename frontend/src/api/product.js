@@ -4,7 +4,7 @@ const URL = {
     AllProduct: 'http://localhost:8082/store/product/',
     EditProduct: 'http://localhost:8082/store/product/edit',
     AddProduct: 'http://localhost:8082/store/product/add',
-    DeleteProduct: 'http://localhost:8082/store/product/delete',
+    DeleteProduct: 'http://localhost:8082/store/goods/delete',
 };
 
 const AllProducts = () => {
