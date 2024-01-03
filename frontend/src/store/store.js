@@ -92,6 +92,7 @@ export default new Vuex.Store({
             localStorage.removeItem(ADMIN_USER_TOKEN);
             localStorage.removeItem(ADMIN_USER_NAME);
             localStorage.removeItem(ADMIN_USER_ID);
+
         },
         async adminLogin({ commit }, loginForm) {
             try {
