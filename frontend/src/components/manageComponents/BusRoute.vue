@@ -111,7 +111,13 @@ export default {
     },
     async saveEditedData() {
       console.log(this.editedRowData)
-      await EditRoutes(this.editedRowData);
+      const{routeId, routeName, selectedStations}=this.editedRowData;
+      const temp=new FormData();
+      temp.append('routeId',routeId);
+      temp.append('routeName',routeName);
+      temp.append('selectedStations', selectedStations);
+      console.log(temp)
+      await EditRoutes(temp);
       const index = this.tableData.findIndex(item => item.id === this.editedRowData.id);
       if (index !== -1) {
         this.$set(this.tableData, index, { ...this.editedRowData });
@@ -119,15 +125,21 @@ export default {
       this.editDialogVisible = false;
     },
     async handleAddConfirm() {
-      const { name, selectedStations } = this.formData;
+      const temp = new FormData();
+      const { routeName, selectedStations } = this.formData;
+      console.log('rrr')
+      console.log(routeName)
+
       const route = {
-        name,
-        stations: selectedStations.map(stationId => this.allStations.find(station => station.id === stationId)),
+        name: routeName,
+        stations: selectedStations,
       };
 
-      console.log(route);
+      temp.append('routeName',routeName);
+      temp.append('selectedStations', selectedStations);
+      console.log(temp);
 
-      await AddRoutes(route);
+      await AddRoutes(temp);
       this.tableData.push(route);
       this.dialogVisible = false;
     },

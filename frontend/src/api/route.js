@@ -9,21 +9,21 @@ const URL = {
 
 const AllRoutes = () => {
     return axios.get(URL.AllRoute, {
-        headers: { 'Content-Type': 'application/json;charset=utf-8' 
+        headers: { 'Content-Type': 'application/json;charset=utf-8'
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
 const EditRoutes = (data) => {
     return axios.post(URL.EditRoute, data,{
-        headers: { 'Content-Type': 'application/json'
+        headers: { 'Content-Type': 'multipart/form-data'
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
 
 const AddRoutes = (data) => {
     return axios.post(URL.AddRoute, data,{
-        headers: { 'Content-Type': 'application/json'
+        headers: { 'Content-Type': 'multipart/form-data'
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
 }
