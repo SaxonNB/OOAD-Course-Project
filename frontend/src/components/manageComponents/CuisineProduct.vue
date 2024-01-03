@@ -59,6 +59,9 @@
         <el-form-item label="价格" prop="price">
           <el-input v-model="editedRowData.price"></el-input>
         </el-form-item>
+        <el-form-item label="数量" prop="quantity">
+          <el-input v-model="formData.quantity"></el-input>
+        </el-form-item>
       </el-form>
 
       <div class="dialog-footer">
