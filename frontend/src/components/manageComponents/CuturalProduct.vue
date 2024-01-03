@@ -59,6 +59,9 @@
         <el-form-item label="价格" prop="price">
           <el-input v-model="editedRowData.price"></el-input>
         </el-form-item>
+        <el-form-item label="数量" prop="quantity">
+          <el-input v-model="formData.quantity"></el-input>
+        </el-form-item>
       </el-form>
 
       <div class="dialog-footer">
@@ -73,8 +76,7 @@
 
 <script>
 // import axios from 'axios';
-// import { AllCuisines, EditCuisines, AddCuisines, } from '@/api/cuisine';
-import {AllProducts} from "@/api/product";
+import { AllCuisines, EditCuisines, AddCuisines, } from '@/api/cuisine';
 export default {
   name: "CuisineProduct",
   data() {
@@ -107,7 +109,8 @@ export default {
   },
   methods: {
     async fetchData() {
-      const responseData = (await AllProducts()).data;
+      const responseData = (await AllCuisines()).data;
+      console.log(responseData)
       // 将响应式对象转换为普通 JavaScript 对象
       const transformedData = responseData.map(item => {
         if (Array.isArray(item)) {
