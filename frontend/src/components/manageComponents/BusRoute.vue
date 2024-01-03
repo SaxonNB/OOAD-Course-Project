@@ -24,7 +24,7 @@
     <el-button type="primary" @click="dialogVisible = true">添加数据</el-button>
 
     <!-- 添加数据的弹窗 -->
-    <el-dialog title="添加数据" :visible.sync="dialogVisible">
+    <el-dialog title="添加数据" :visible.sync="dialogVisible" v-if="formData !== null">
       <el-form :model="formData" label-width="80px">
         <el-form-item label="名称" prop="routeName">
           <el-input v-model="formData.routeName"></el-input>
@@ -130,17 +130,19 @@ export default {
       console.log('rrr')
       console.log(routeName)
 
-      const route = {
-        name: routeName,
-        stations: selectedStations,
-      };
+      // const route = {
+      //   name: routeName,
+      //   stations: selectedStations,
+      // };
 
       temp.append('routeName',routeName);
       temp.append('selectedStations', selectedStations);
       console.log(temp);
 
       await AddRoutes(temp);
-      this.tableData.push(route);
+      console.log('fff')
+      console.log(this.tableData)
+      await this.fetchData();
       this.dialogVisible = false;
     },
   },
