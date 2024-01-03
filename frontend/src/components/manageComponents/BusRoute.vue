@@ -47,7 +47,7 @@
         <el-form-item label="名称" prop="routeName">
           <el-input v-model="editedRowData.routeName"></el-input>
         </el-form-item>
-        <el-form-item label="车站" prop="stations">
+        <el-form-item label="车站" prop="stations" v-if="editDialogVisible">
           <el-select v-model="editedRowData.selectedStations" multiple filterable>
             <el-option v-for="station in allStations" :key="station.id" :label="station.name" :value="station.id"/>
           </el-select>

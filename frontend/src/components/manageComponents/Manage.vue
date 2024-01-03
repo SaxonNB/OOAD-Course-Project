@@ -72,4 +72,7 @@ export default {
   margin: 0;
   padding: 0;
 }
+.el-aside {
+  margin-top: 60px; /* 调整这个值来控制侧边栏与顶部的距离 */
+}
 </style>
