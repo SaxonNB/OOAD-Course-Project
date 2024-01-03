@@ -18,7 +18,17 @@ const checkLocalUser = () => {
 
     return null;
 };
+const checkLocalAdmin = () => {
+    const userToken = localStorage.getItem(ADMIN_USER_TOKEN);
+    const userName = localStorage.getItem(ADMIN_USER_NAME);
+    const userId = localStorage.getItem(ADMIN_USER_ID);
 
+    if (userToken && userName && userId) {
+        return { token: userToken, name: userName, id: userId };
+    }
+
+    return null;
+};
 export default new Vuex.Store({
     state: {
         originalPage: null,
@@ -105,6 +115,10 @@ export default new Vuex.Store({
         const localUser = checkLocalUser();
         if (localUser) {
             store.commit('userLogin', localUser);
+        }
+        const localAdmin = checkLocalAdmin();
+        if (localAdmin) {
+            store.commit('adminLogin',localAdmin)
         }
     }],
 });
