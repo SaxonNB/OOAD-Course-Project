@@ -4,7 +4,7 @@ const URL = {
     AllCuisine: 'http://localhost:8082/store/cuisine',
     EditCuisine: 'http://localhost:8082/store/edit/1',
     AddCuisine: 'http://localhost:8082/store/addGood/1',
-    DeleteCuisine: 'http://localhost:8082/store/delete',
+    DeleteCuisine: 'http://localhost:8082/store/goods/delete',
 };
 
 const AllCuisines = () => {
@@ -28,8 +28,8 @@ const AddCuisines = (data) => {
     });
 }
 
-const DeleteCuisine = (name) => {
-    return axios.post(URL.DeleteCuisine, name,{
+const DeleteCuisine = (id) => {
+    return axios.post(URL.DeleteCuisine, id,{
         headers: { 'Content-Type': 'application/json;charset=utf-8' 
         ,'token': `${localStorage.getItem('admin_user_token')}`}
     });
