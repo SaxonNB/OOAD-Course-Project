@@ -71,7 +71,7 @@
                 </div>
                 <button class="send-btn" @click="sendComment()" :disabled="!this.canComment">发送</button>
                 <!-- 显示用户选择的图片 -->
-                <img v-if="selectedImage" :src="selectedImage" class="selected-image-preview"
+                <img v-if="selectedImage" :src="selectedImageUrl" class="selected-image-preview"
                      style="width: 100px; height: 100px"/>
               </div>
               <div class="tab-view flex-view">
@@ -168,6 +168,7 @@ export default {
     handleFileChange(event) {
       this.selectedImage = event.target.files[0];
       this.selectedImageUrl = URL.createObjectURL(this.selectedImage);
+      console.log('qqqqq')
       console.log(this.selectedImage);
     },
     // Updated sendComment method to include image data in the request

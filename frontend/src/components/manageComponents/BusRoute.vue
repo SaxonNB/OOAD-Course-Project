@@ -26,8 +26,8 @@
     <!-- 添加数据的弹窗 -->
     <el-dialog title="添加数据" :visible.sync="dialogVisible">
       <el-form :model="formData" label-width="80px">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="formData.name"></el-input>
+        <el-form-item label="名称" prop="routeName">
+          <el-input v-model="formData.routeName"></el-input>
         </el-form-item>
         <el-form-item label="车站" prop="stations">
           <el-select v-model="formData.selectedStations" multiple filterable>
@@ -44,8 +44,8 @@
 
     <el-dialog title="编辑信息" :visible.sync="editDialogVisible" v-if="editedRowData !== null">
       <el-form :model="editedRowData" label-width="80px">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="editedRowData.name"></el-input>
+        <el-form-item label="名称" prop="routeName">
+          <el-input v-model="editedRowData.routeName"></el-input>
         </el-form-item>
         <el-form-item label="车站" prop="stations">
           <el-select v-model="editedRowData.selectedStations" multiple filterable>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { AllRoutes, EditRoutes, AddRoutes, AllStations } from '@/api/route';
+import { AllRoutes, EditRoutes, AddRoutes, getAllStation } from '@/api/route';
 
 export default {
   name: "BusRoute",
@@ -76,7 +76,7 @@ export default {
       dialogVisible: false,
       editedRowData: null,
       formData: {
-        name: '',
+        routeName: '',
         selectedStations: [],
       },
       allStations: [], // List of all available stations
@@ -93,7 +93,7 @@ export default {
     async fetchData() {
       this.tableData = (await AllRoutes()).data;
       console.log(this.tableData);
-      this.allStations = (await AllStations()).data;
+      this.allStations = (await getAllStation()).data;
       console.log(this.allStations);
     },
     handleSizeChange(size) {
@@ -105,6 +105,8 @@ export default {
     },
     handleEdit(row) {
       this.editedRowData = { ...row };
+      // 将车站的 ID 数组映射为车站对象数组
+      this.editedRowData.selectedStations = this.editedRowData.stations.map(station => station.id);
       this.editDialogVisible = true;
     },
     async saveEditedData() {
