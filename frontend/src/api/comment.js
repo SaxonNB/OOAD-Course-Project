@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const URL = {
-    getComment: 'http://localhost:8082/user/allusers',
-    BlockComment: 'http://localhost:8082/user/mute',
-    UnBlockComment: 'http://localhost:8082/user/unmute',
+    getComment: 'http://localhost:8082/comment/all',
+    BlockComment: 'http://localhost:8082/comment/reject',
+    UnBlockComment: 'http://localhost:8082/comment/approve',
 };
 
 const getComments = () => {

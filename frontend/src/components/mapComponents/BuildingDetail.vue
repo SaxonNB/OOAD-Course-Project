@@ -71,7 +71,7 @@
                 </div>
                 <button class="send-btn" @click="sendComment()" :disabled="!this.canComment">发送</button>
                 <!-- 显示用户选择的图片 -->
-                <img v-if="selectedImage" :src="selectedImageUrl" class="selected-image-preview"
+                <img v-if="selectedImageUrl" :src="selectedImageUrl" class="selected-image-preview"
                      style="width: 100px; height: 100px"/>
               </div>
               <div class="tab-view flex-view">
@@ -116,6 +116,7 @@
 import MyFooter from "@/components/welcomeComponents/MyFooter.vue";
 import MyHeader from "@/components/welcomeComponents/MyHeader.vue";
 import {getBuildingApi, getBuildingCommentApi, sendCommentApi} from "@/api/user";
+import {canSendComment} from "@/api/user";
 
 export default {
   components: {
@@ -133,11 +134,14 @@ export default {
       commentText: '',
       selectedImage: null,
       selectedImageUrl: null,
-      canComment: false
+      canComment: true
     };
   },
   mounted() {
     this.buildingId = this.$route.params.id;
+    if (localStorage.getItem('user_id')){
+      this.checkCanComment();
+    }
     this.getThingDetail();
     this.getCommentList();
     console.log('rrr')
@@ -151,6 +155,13 @@ export default {
     selectTab(index) {
       this.selectTabIndex = index;
       this.tabUnderLeft = 6 + 54 * index;
+    },
+    async checkCanComment() {
+      const result = await canSendComment(localStorage.getItem('user_id'));
+      console.log('检查是否可以评论');
+      console.log(result.data)
+      this.canComment = result.data;
+
     },
     async getThingDetail() {
       // console.log(7777777)
@@ -174,7 +185,7 @@ export default {
     // Updated sendComment method to include image data in the request
     async sendComment() {
       console.log('发送评论')
-      console.log(localStorage.getItem('user_token'))
+      // console.log(localStorage.getItem('user_token'))
       if (!localStorage.getItem("user_token")) {
         this.commentText = "";
         this.selectedImage = null;
@@ -197,30 +208,31 @@ export default {
       // 添加上传的图片到 FormData 对象
       if (this.selectedImage) {
         formData.append("image", this.selectedImage, this.selectedImage.name);
+        console.log('ooo')
+        console.log(this.selectedImage)
+        console.log(this.selectedImage.name)
       }
-      console.log(formData)
-      console.log(formData.values())
-
       try {
         // Send POST request with FormData containing text and image data
-        const result = sendCommentApi(formData);
+        const result = await sendCommentApi(formData);
         // Handle the response as needed
         console.log(result.data);
-        this.commentData = result.data;
-      } catch (error) {
-        // Handle error
-        console.error("Error sending comment:", error);
-      } finally {
         this.commentText = "";
         this.selectedImage = null;
         this.selectedImageUrl = null;
+      } catch (error) {
+        // Handle error
+        console.error("Error sending comment:", error);
       }
     },
     async getCommentList() {
       console.log('获取评论')
       const result = await getBuildingCommentApi(this.buildingId);
       console.log(result.data)
-      this.commentData = result.data;
+      if (result.status === 200){
+        this.commentData = result.data;
+      }
+
     },
   },
 };

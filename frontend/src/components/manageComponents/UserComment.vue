@@ -1,19 +1,26 @@
 <template>
   <div>
     <el-table :data="currentTableData" style="width: 100%">
-      <el-table-column label="评论用户" prop="commentUser"></el-table-column>
-      <el-table-column label="评论建筑物名" prop="commentBuilding"></el-table-column>
-      <el-table-column label="评论内容" prop="commentContent">
+      <el-table-column label="评论用户" prop="commenterName"></el-table-column>
+      <el-table-column label="评论建筑物名" prop="buildingName"></el-table-column>
+      <el-table-column label="评论内容" prop="content">
         <template slot-scope="scope">
           <!-- 显示评论内容 -->
-          {{ scope.row.commentContent }}
+          {{ scope.row.content }}
           <!-- 显示评论图片 -->
-          <img v-if="scope.row.commentImage" :src="scope.row.commentImage" alt="评论图片" style="max-width: 50px; max-height: 50px;">
+          <!-- 显示评论图片 -->
+
+          <!-- 显示评论图片 -->
+          <div v-if="scope.row.photos && scope.row.photos.length > 0">
+            <img v-for="(photo, index) in scope.row.photos" :key="index" :src="photo.path" alt="评论图片" style="max-width: 50px; max-height: 50px;">
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.isBlocked" active-text="通过" inactive-text="禁止" @change="handleBlock(scope.row, scope.$index)"/>
+          <!-- 使用 v-if 来判断显示的文本 -->
+          <el-switch v-if="scope.row.status === 'APPROVE'" v-model="scope.row.commentStatus" :active-text="'通过'" :inactive-text="'不通过'" @change="handleBlock(scope.row)"/>
+          <el-switch v-else v-model="scope.row.commentStatus" :active-text="'通过'" :inactive-text="'不通过'" @change="handleBlock(scope.row)"/>
         </template>
       </el-table-column>
     </el-table>
@@ -49,38 +56,28 @@ export default {
   methods: {
     async fetchData() {
       const responseData = (await getComments()).data;
-      // 将响应式对象转换为普通 JavaScript 对象
-      const transformedData = responseData.map(item => {
-        if (Array.isArray(item)) {
-          // 如果是数组，转换为对象
-          return {comment: item[0]};
-        } else {
-          // 如果是对象，直接返回
-          return item;
-        }
+      console.log("zzz")
+      console.log(responseData)
+
+      // 为每个评论对象添加 commentStatus 字段
+      this.tableData = responseData.map(comment => {
+        return {
+          ...comment,
+          commentStatus: comment.status === 'APPROVE' ? '通过' : '不通过',
+        };
       });
-      this.tableData = transformedData;
     },
-    async handleBlock(user) {
-      // 判断用户是否已被拉黑
-      if (user.isBlocked) {
-        // 如果未被拉黑，调用拉黑的接口
-        try {
-          await BlockComments(user.comment);
+    async handleBlock(comment) {
+      try {
+        if (comment.status === 'APPROVE') {
+          await BlockComments(comment.id);
           console.log('拉黑成功');
-        } catch (error) {
-          console.error('拉黑失败:', error);
-        }
-
-      } else {
-        // 如果已经被拉黑，调用取消拉黑的接口
-        try {
-          await UnBlockComments(user.comment);
+        } else {
+          await UnBlockComments(comment.id);
           console.log('取消拉黑成功');
-        } catch (error) {
-          console.error('取消拉黑失败:', error);
         }
-
+      } catch (error) {
+        console.error('操作失败:', error);
       }
     },
     handleSizeChange(size) {
@@ -101,4 +98,3 @@ export default {
 <style scoped>
 /* 样式 */
 </style>
-  

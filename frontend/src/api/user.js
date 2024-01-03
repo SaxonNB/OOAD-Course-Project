@@ -8,7 +8,8 @@ const URL = {
     getBusRoute: 'http://localhost:8082/route/planRoute',
     getBuildingDetail: 'http://localhost:8082/building/',
     getBuildingComment: 'http://localhost:8082/comment/building/',
-    sendComment: 'http://localhost:8082/comment/add'
+    sendComment: 'http://localhost:8082/comment/add',
+    canComment : 'http://localhost:8082/user/canComment'
 };
 
 const sendCommentApi = async (data) => {
@@ -17,6 +18,13 @@ const sendCommentApi = async (data) => {
             ,'token': `${localStorage.getItem('user_token')}`}
     });
 };
+
+const canSendComment = async (id) => {
+    return axios.post(URL.canComment, id, {
+        headers: { 'Content-Type': 'application/json;charset=utf-8'
+            ,'token': `${localStorage.getItem('user_token')}`}
+    });
+}
 
 const getBuildingCommentApi = async (buildingId) => {
     return axios.get(URL.getBuildingComment+buildingId, {
@@ -74,5 +82,6 @@ export {
     getBusRoute,
     getBuildingApi,
     getBuildingCommentApi,
-    sendCommentApi
+    sendCommentApi,
+    canSendComment
 };
