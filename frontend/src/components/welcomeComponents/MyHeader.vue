@@ -28,6 +28,9 @@ export default {
       localStorage.removeItem('user_id');
       localStorage.removeItem('user_name')
       this.$store.dispatch('userLogout');
+      if (this.$route.path !== '/home') {
+        this.$router.push('/home');
+      }
     },
     login(){
       this.$router.push("/user/login");

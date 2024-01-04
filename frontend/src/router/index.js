@@ -11,8 +11,6 @@ import CuturalProduct from '../components/manageComponents/CuturalProduct.vue';
 import BusRoute from '../components/manageComponents/BusRoute.vue';
 import BusStation from '../components/manageComponents/BusStation.vue';
 import UserComment from '../components/manageComponents/UserComment.vue';
-import BuildingStatus from "@/components/welcomeComponents/BuildingStatus.vue";
-import CommentAreas from "@/components/welcomeComponents/CommentAreas.vue";
 import BuildingDetail from "@/components/mapComponents/BuildingDetail.vue";
 import DataStatistics from "@/components/manageComponents/DataStatistics.vue";
 import CanteenPage from "@/views/CanteenPage.vue";
@@ -46,8 +44,6 @@ const routes = [
             { path: 'DataStatistics', component: DataStatistics}
         ]
     },
-    {path: '/building', component: BuildingStatus},
-    {path: '/comments', component: CommentAreas},
     {
         path: "/restaurant-reservation",
         component: CanteenPage,

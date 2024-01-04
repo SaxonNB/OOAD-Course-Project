@@ -47,7 +47,7 @@
         <el-form-item label="名称" prop="routeName">
           <el-input v-model="editedRowData.routeName"></el-input>
         </el-form-item>
-        <el-form-item label="车站" prop="stations" v-if="editDialogVisible">
+        <el-form-item label="车站" prop="stations">
           <el-select v-model="editedRowData.selectedStations" multiple filterable>
             <el-option v-for="station in allStations" :key="station.id" :label="station.name" :value="station.id"/>
           </el-select>
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { AllRoutes, EditRoutes, AddRoutes, getAllStation } from '@/api/route';
+import {AllRoutes, EditRoutes, AddRoutes, getAllStation} from '@/api/route';
 
 export default {
   name: "BusRoute",
@@ -74,7 +74,16 @@ export default {
       pageSize: 5,
       editDialogVisible: false,
       dialogVisible: false,
-      editedRowData: null,
+      editedRowData: {
+        routeId: '',
+        routeName: '',
+        selectedStations: [],
+      },
+      tempEditData:{
+        routeId: '',
+        routeName: '',
+        selectedStations: [],
+      },
       formData: {
         routeName: '',
         selectedStations: [],
@@ -104,29 +113,53 @@ export default {
       this.currentPage = page;
     },
     handleEdit(row) {
-      this.editedRowData = { ...row };
-      // 将车站的 ID 数组映射为车站对象数组
-      this.editedRowData.selectedStations = this.editedRowData.stations.map(station => station.id);
+      // this.editedRowData = {...row};
+      console.log({...row})
+      // // 映射车站的 ID 数组为车站对象数组
+      // // 映射车站对象数组为只包含 id 的数组
+      this.tempEditData = { ...row };
+
+      // 提取 selectedStations 的值
+      const selectedStations = this.tempEditData.stations.map(station => station.id);
+      this.editedRowData.selectedStations = selectedStations;
+      this.editedRowData.routeId = this.tempEditData.routeId;
+      this.editedRowData.routeName = this.tempEditData.routeName
+
+      console.log('temp Edited Row Data:', this.tempEditData);
+      console.log('Edited Row Data:', this.editedRowData);
       this.editDialogVisible = true;
     },
     async saveEditedData() {
-      console.log(this.editedRowData)
-      const{routeId, routeName, selectedStations}=this.editedRowData;
-      const temp=new FormData();
-      temp.append('routeId',routeId);
-      temp.append('routeName',routeName);
-      temp.append('selectedStations', selectedStations);
-      console.log(temp)
+      const {routeId, routeName, selectedStations} = this.editedRowData;
+
+      // 创建新的数组，确保触发 Vue.js 的响应性
+      const newSelectedStations = [...selectedStations];
+      console.log('Save Edited Data:', this.editedRowData);
+      const temp = new FormData();
+      temp.append('routeId', routeId);
+      temp.append('routeName', routeName);
+
+      // 使用新的数组
+      temp.append('selectedStations', newSelectedStations);
+
       await EditRoutes(temp);
-      const index = this.tableData.findIndex(item => item.id === this.editedRowData.id);
-      if (index !== -1) {
-        this.$set(this.tableData, index, { ...this.editedRowData });
-      }
+
+      console.log('Data after EditRoutes:', this.editedRowData);
+      this.editedRowData = {
+        routeId: '',
+        routeName: '',
+        selectedStations: [],
+      };
+      this.$forceUpdate();
+      await this.fetchData();
+
+      // 关闭编辑对话框
       this.editDialogVisible = false;
     },
     async handleAddConfirm() {
       const temp = new FormData();
-      const { routeName, selectedStations } = this.formData;
+      console.log('formData is :',this.formData)
+      const {routeName, selectedStations} = this.formData;
       console.log('rrr')
       console.log(routeName)
 
@@ -135,7 +168,7 @@ export default {
       //   stations: selectedStations,
       // };
 
-      temp.append('routeName',routeName);
+      temp.append('routeName', routeName);
       temp.append('selectedStations', selectedStations);
       console.log(temp);
 
