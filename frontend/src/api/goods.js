@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const URL = {
     buyGoods: 'http://localhost:8082/order/create',
-    getAllFood: 'http://localhost:8082/store/goods/1',
+    getAllFood: 'http://localhost:8082/store/goods/1?includeHidden=true',
+    getAvailableFood: 'http://localhost:8082/store/goods/1',
     getAllCreative:'http://localhost:8082/store/goods/2',
     getFoodRecord:'http://localhost:8082/order/list/1',
     getCreativeRecord:'http://localhost:8082/order/list/2',
@@ -18,6 +19,14 @@ const buyGoodsApi = async (goods) => {
 
 const getAllFoodApi = async () => {
     return axios.get(URL.getAllFood, {
+        headers: { 'Content-Type': 'application/json;charset=utf-8',
+            'token' : `${localStorage.getItem('user_token')}`
+        }
+    });
+};
+
+const getAvailableFoodApi = async () => {
+    return axios.get(URL.getAvailableFood, {
         headers: { 'Content-Type': 'application/json;charset=utf-8',
             'token' : `${localStorage.getItem('user_token')}`
         }
@@ -51,6 +60,7 @@ const getCreativeRecordApi = async ()=> {
 export {
     buyGoodsApi,
     getAllFoodApi,
+    getAvailableFoodApi,
     getAllCreativeApi,
     getFoodRecordApi,
     getCreativeRecordApi,

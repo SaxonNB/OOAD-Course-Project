@@ -53,7 +53,7 @@
   </div>
 </template>
 <script>
-import {buyGoodsApi, getAllFoodApi} from "@/api/goods";
+import {buyGoodsApi, getAvailableFoodApi} from "@/api/goods";
 import {getCarts, getCart, setCart, saveCarts} from "@/api/shoppingCart";
 import MyHeader from "@/components/welcomeComponents/MyHeader.vue";
 import {ref} from "vue";
@@ -84,15 +84,24 @@ export default {
   },
   methods: {
     async fetchData() {
-      const result = await getAllFoodApi();
+      const result = await getAvailableFoodApi();
       this.hotDishes = result.data;
       this.updateCart();
       this.updateTotalAmount();
     },
     updateCart() {
+      const dishesMap = {};
       for (const idx in this.hotDishes) {
         const dish = this.hotDishes[idx];
-        if (this.amounts[dish.id] > dish.quantity) {
+        dishesMap[dish.id] = dish;
+      }
+      console.log(this.amounts);
+      for (const idx in this.amounts) {
+        const dish = dishesMap[idx];
+        if (dish == null) {
+          this.setCart(idx, 0);
+          delete this.amounts[idx];
+        } else if (this.amounts[dish.id] > dish.quantity) {
           this.amounts[dish.id] = dish.quantity;
           this.setCart(dish.id, dish.quantity);
         }

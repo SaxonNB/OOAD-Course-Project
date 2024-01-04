@@ -19,7 +19,11 @@ const getCart = (carts, storeId) => {
 const setCart = (storeId, goodsId, amount) => {
     const carts = getCarts();
     const cart = getCart(carts, storeId);
-    cart[goodsId] = amount;
+    if (amount === 0) {
+        delete cart[goodsId];
+    } else {
+        cart[goodsId] = amount;
+    }
     saveCarts(carts);
 }
 
