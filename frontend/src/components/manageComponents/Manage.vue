@@ -4,8 +4,8 @@
   <AdminHeader></AdminHeader>
   <el-container class="container">
     <!-- 侧边栏 -->
-    <el-aside width="200px">
-      <el-menu :default-active="activeMenu" class="el-menu-vertical-demo">
+    <el-aside width="200px" style="height: 100%;">
+      <el-menu background-color="#fff" text-color="#000" active-text-color="#FFCCCC" :default-active="activeMenu" class="el-menu-vertical-demo">
         <el-menu-item index="UserInformation"
                       @click="handleMenuItemClick('UserInformation')">用户信息
         </el-menu-item>
@@ -50,7 +50,7 @@ export default {
   },
   created() {
     // Set activeMenu based on the current route
-    this.activeMenu = this.$route.params.category;
+    this.activeMenu = this.$route.params.categoryc;
   },
   methods: {
     handleLogout() {
@@ -76,5 +76,6 @@ export default {
 }
 .el-aside {
   margin-top: 60px; /* 调整这个值来控制侧边栏与顶部的距离 */
+  height: 100%; /* Set the height to 100% */
 }
 </style>
