@@ -22,10 +22,19 @@
     </div>
     <div class="cart-button-div">
       <el-badge :value="totalAmount">
-        <el-button class="cart-button" icon="el-icon-shopping-cart-1" circle
-                   @click="cartVisible = true">
-        </el-button>
+        <el-tooltip class="item" effect="dark" content="购物车" placement="left">
+          <el-button class="cart-button" icon="el-icon-shopping-cart-1" circle
+                     @click="cartVisible = true">
+          </el-button>
+        </el-tooltip>
       </el-badge>
+    </div>
+    <div class="order-button-div">
+      <el-tooltip class="item" effect="dark" content="历史订单" placement="left">
+        <el-button class="cart-button" icon="el-icon-tickets" circle
+                   @click="$router.push($router.currentRoute.path + '/record');">
+        </el-button>
+      </el-tooltip>
     </div>
     <el-drawer
         title="购物车"
@@ -200,6 +209,11 @@ export default {
 }
 .cart-button {
   font-size: 35px;
+}
+.order-button-div {
+  position: fixed;
+  right: 70px;
+  bottom: 150px;
 }
 .cart-button-div {
   position: fixed;
