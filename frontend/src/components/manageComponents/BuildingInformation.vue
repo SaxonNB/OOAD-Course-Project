@@ -179,15 +179,7 @@ export default {
       console.log(this.editedRowData);
 
       await EditBuildings(this.editedRowData);
-
-      // 找到要替换的行的索引
-      const index = this.tableData.findIndex(item => item.id === this.editedRowData.id);
-
-      // 如果找到了对应的行
-      if (index !== -1) {
-        // 替换行数据
-        this.$set(this.tableData, index, {...this.editedRowData});
-      }
+      await this.fetchData();
       // 保存完成后关闭编辑对话框
       this.editDialogVisible = false;
     },
@@ -214,15 +206,7 @@ export default {
         await AddBuildings(formData);
 
         // Update front-end data after successful addition
-        this.tableData.push({
-          name: this.formData.name,
-          tag: this.formData.tag,
-          description: this.formData.description,
-          details: this.formData.details,
-          latitude: this.formData.latitude,
-          longitude: this.formData.longitude,
-        });
-
+        await this.fetchData();
         // Reset form data
         this.formData.name = '';
         this.formData.tag = '';

@@ -144,14 +144,7 @@ export default {
 
       await EditCuisines(this.editedRowData);
 
-      // 找到要替换的行的索引
-      const index = this.tableData.findIndex(item => item.id === this.editedRowData.id);
-
-      // 如果找到了对应的行
-      if (index !== -1) {
-        // 替换行数据
-        this.$set(this.tableData, index, { ...this.editedRowData });
-      }
+      await this.fetchData();
       // 保存完成后关闭编辑对话框
       this.editDialogVisible = false;
     },
@@ -168,10 +161,7 @@ export default {
 
       await AddCuisines(formData);
 
-      this.tableData.push({
-        name: this.formData.name,
-        price: this.formData.price,
-      });
+      await this.fetchData();
 
 
       this.formData.name = '';

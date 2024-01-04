@@ -6,7 +6,8 @@
       <el-table-column label="数量" prop="quantity"></el-table-column>
       <el-table-column label="图片">
         <template slot-scope="scope">
-          <img v-if="scope.row.image" :src="scope.row.image" alt="Product Image" style="max-width: 50px; max-height: 50px;">
+          <img v-if="scope.row.image" :src="scope.row.image" alt="Product Image"
+               style="max-width: 50px; max-height: 50px;">
         </template>
       </el-table-column>
       <el-table-column>
@@ -19,8 +20,8 @@
     </el-table>
 
     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-      :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
-      :total="tableData.length" />
+                   :page-sizes="[5, 10, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper"
+                   :total="tableData.length"/>
 
     <el-button type="primary" @click="dialogVisible = true">添加数据</el-button>
 
@@ -38,9 +39,9 @@
         </el-form-item>
         <el-form-item label="上传图片" style="position: relative;">
           <input type="file" @change="handleFileUpload"
-            style="position: absolute; top: 0; left: 0; opacity: 100; width: 100%; height: 100%;" />
+                 style="position: absolute; top: 0; left: 0; opacity: 100; width: 100%; height: 100%;"/>
           <img v-if="selectedFileUrl" :src="selectedFileUrl" alt="Selected Image"
-            style="max-width: 100%; max-height: 200px; margin-top: 10px; box-sizing: border-box; border: 1px solid #ccc; padding: 5px;" />
+               style="max-width: 100%; max-height: 200px; margin-top: 10px; box-sizing: border-box; border: 1px solid #ccc; padding: 5px;"/>
         </el-form-item>
       </el-form>
 
@@ -76,13 +77,13 @@
 
 <script>
 // import axios from 'axios';
-import { AllCuisines, EditCuisines, AddCuisines, DeleteCuisine} from '@/api/cuisine';
+import {AllCuisines, EditCuisines, AddCuisines, DeleteCuisine} from '@/api/cuisine';
+
 export default {
   name: "CuisineProduct",
   data() {
     return {
-      tableData: [
-      ],
+      tableData: [],
       currentPage: 1,
       pageSize: 5,
       editDialogVisible: false,
@@ -115,7 +116,7 @@ export default {
       const transformedData = responseData.map(item => {
         if (Array.isArray(item)) {
           // 如果是数组，转换为对象
-          return { name: item[0], price: item[1], quantity: item[2], image: item[3]};
+          return {name: item[0], price: item[1], quantity: item[2], image: item[3]};
         } else {
           // 如果是对象，直接返回
           return item;
@@ -133,7 +134,7 @@ export default {
     handleEdit(row) {
 
       // 可以在这里打开编辑对话框，并将编辑的行数据保存在 data 中
-      this.editedRowData = { ...row };
+      this.editedRowData = {...row};
       this.editDialogVisible = true;
       console.log(row);
     },
@@ -143,14 +144,7 @@ export default {
 
       await EditCuisines(this.editedRowData);
 
-      // 找到要替换的行的索引
-      const index = this.tableData.findIndex(item => item.id === this.editedRowData.id);
-
-      // 如果找到了对应的行
-      if (index !== -1) {
-        // 替换行数据
-        this.$set(this.tableData, index, { ...this.editedRowData });
-      }
+      await this.fetchData();
       // 保存完成后关闭编辑对话框
       this.editDialogVisible = false;
     },
@@ -167,10 +161,7 @@ export default {
 
       await AddCuisines(formData);
 
-      this.tableData.push({
-        name: this.formData.name,
-        price: this.formData.price,
-      });
+      await this.fetchData();
 
 
       this.formData.name = '';
@@ -188,13 +179,13 @@ export default {
       const idToDelete = this.tableData[index].id;
       console.log(idToDelete)
       const result = await DeleteCuisine(idToDelete);
-      if (result.status === 200){
+      if (result.status === 200) {
         this.$message({
           message: '删除成功!',
           type: "success"
         });
         this.tableData.splice(index, 1);
-      }else {
+      } else {
         this.$message({
           message: '删除失败!',
           type: "error"

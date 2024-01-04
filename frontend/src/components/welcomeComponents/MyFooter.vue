@@ -1,12 +1,9 @@
 <template>
   <div class="footer-view">
     <div class="foot-link-box flex-view">
-      <a href="https://github.com/geeeeeeeek/java_hotel" class="foot-link" target="_blank">系统文档</a>
+      <a href="https://github.com/SaxonNB/OOAD-Course-Project.git" class="foot-link" target="_blank">前端系统文档</a>
       <div class="link-split"></div>
-      <a href="/manage" class="foot-link" target="_blank">后台管理</a>
-      <div class="link-split"></div>
-      <!--此处还缺关于我们的页面-->
-      <a href="" class="foot-link" target="_blank">关于我们</a>
+      <a href="https://github.com/Joy-Mine/SUSTech-Campus.git" class="foot-link" target="_blank">后端系统文档</a>
     </div>
     <div class="footer-infos">
       <span>

@@ -41,26 +41,26 @@ import AdminHeader from "@/components/welcomeComponents/AdminHeader.vue";
 
 export default {
   name: "ManageComponent",
-  components: {AdminHeader},
+  components: { AdminHeader },
   data() {
     return {
-      activeMenu: 'UserInformation', // 默认选中的菜单项
+      activeMenu: '', // Remove the default value
     };
+  },
+  created() {
+    // Set activeMenu based on the current route
+    this.activeMenu = this.$route.params.category;
   },
   methods: {
     handleLogout() {
-      // 处理退出登录事件
-      // 这里可以添加退出登录的逻辑
       this.$router.push(`/home`);
       console.log('Logout');
     },
     handleMenuItemClick(index) {
-      // 检查当前路径是否已经是目标路径
       const currentPath = this.$route.path;
       const targetPath = `/manage/${index}`;
 
       if (currentPath !== targetPath) {
-        // 导航到目标路径
         this.$router.push(targetPath);
       }
     },
