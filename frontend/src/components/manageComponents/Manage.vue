@@ -18,6 +18,7 @@
         <el-menu-item index="BusRoute" @click="handleMenuItemClick('BusRoute')">公交线</el-menu-item>
         <el-menu-item index="UserComment" @click="handleMenuItemClick('UserComment')">用户评论</el-menu-item>
         <el-menu-item index="DataStatistics" @click="handleMenuItemClick('DataStatistics')">数据统计</el-menu-item>
+        <el-menu-item index="Orders" @click="handleMenuItemClick('Orders')">订单管理</el-menu-item>
       </el-menu>
     </el-aside>
 

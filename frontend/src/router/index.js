@@ -17,6 +17,7 @@ import CanteenPage from "@/views/CanteenPage.vue";
 import CanteenOrdersPage from "@/views/CanteenOrdersPage.vue";
 import StorePage from "@/views/StorePage.vue";
 import StoreOrdersPage from "@/views/StoreOrdersPage.vue";
+import OrderManagement from "@/components/manageComponents/OrderManagement.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -41,7 +42,8 @@ const routes = [
             { path: 'BusRoute', component: BusRoute },
             { path: 'BusStation', component: BusStation },
             { path: 'UserComment', component: UserComment },
-            { path: 'DataStatistics', component: DataStatistics}
+            { path: 'DataStatistics', component: DataStatistics},
+            { path: 'Orders', component: OrderManagement}
         ]
     },
     {

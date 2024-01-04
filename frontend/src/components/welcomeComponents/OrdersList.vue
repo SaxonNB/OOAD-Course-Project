@@ -1,6 +1,24 @@
 <template>
   <div>
     <div class="order-container">
+      <div style="width: 410px; margin: auto;">
+        <el-input
+            placeholder="搜索订单商品"
+            prefix-icon="el-icon-search"
+            v-model="searchInput"
+            @input="handleSearchChange"
+            style="width: 250px; margin-right: 10px"
+            clearable>
+        </el-input>
+        <el-select clearable v-model="searchSelect" placeholder="订单状态" @change="handleSearchChange" style="width: 150px">
+          <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value">
+          </el-option>
+        </el-select>
+      </div>
       <div class="order-box" v-for="order in currentTableData" :key="order.id">
         <el-card>
           <div slot="header" class="clearfix" style="text-align: left">
@@ -23,6 +41,10 @@
             <el-main>
               <h2 class="order-goods-price">{{'￥' + order.totalPrice}}</h2>
               <p class="order-goods-amount">共{{order.totalAmount}}件</p>
+              <el-button type="warning" size="small" v-if="order.status === 'WAITING_PAYMENT'"
+                         @click="cancelOrder(order.id)">取消订单</el-button>
+              <el-button size="small" v-else-if="order.status === 'FINISHED'" disabled>已完成</el-button>
+              <el-button size="small" v-else-if="order.status === 'CANCELLED'" disabled>已取消</el-button>
             </el-main>
           </el-container>
         </el-card>
@@ -34,22 +56,36 @@
           :page-sizes="[5, 10, 20, 50]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="orders.length"
+          :total="validOrders.length"
       />
     </div>
   </div>
 </template>
 <script>
-import {getAllGoodsApi, getOrdersApi} from "@/api/goods";
+import {getAllGoodsApi, cancelOrderApi, getOrdersApi} from "@/api/goods";
 
 export default {
   name:"foodRecord",
   data() {
     return {
       orders: [],
+      validOrders: [],
       goodsPhoto: {},
       pageSize: 10,
       currentPage: 1,
+      searchInput: '',
+      searchSelect: '',
+      options: [{
+        value: 'WAITING_PAYMENT',
+        label: '进行中'
+      }, {
+        value: 'FINISHED',
+        label: '已完成'
+      }, {
+        value: 'CANCELLED',
+        label: '已取消'
+      }],
+
     };
   },
   props: {
@@ -65,7 +101,7 @@ export default {
     currentTableData() {
       const start = (this.currentPage - 1) * this.pageSize;
       const end = start + this.pageSize;
-      return this.orders.slice(start, end);
+      return this.validOrders.slice(start, end);
     },
   },
   methods: {
@@ -85,6 +121,7 @@ export default {
           order.totalAmount += item.amount;
         }
       }
+      this.validOrders = this.orders;
     },
     handleSizeChange(size) {
       this.pageSize = size;
@@ -93,6 +130,45 @@ export default {
     handleCurrentChange(page) {
       this.currentPage = page;
     },
+    handleSearchChange() {
+      this.validOrders = [];
+      for (const orderId in this.orders) {
+        const order = this.orders[orderId];
+        if (this.searchSelect !== '' && order.status !== this.searchSelect) {
+          continue;
+        }
+        let flag = false;
+        for (const itemId in order.items) {
+          const item = order.items[itemId];
+          if (this.searchInput === '' || item.goodsName.search(this.searchInput) !== -1) {
+            flag = true;
+            break;
+          }
+        }
+        if (flag) {
+          this.validOrders.push(order);
+        }
+      }
+      this.currentPage = 1;
+    },
+    async cancelOrder(orderId) {
+      let result;
+      try {
+        result = (await cancelOrderApi(orderId)).data;
+      } catch (e) {
+        this.$message.error('无法取消订单！');
+        return;
+      }
+      if (result === 'success') {
+        this.$message.success('订单取消成功！');
+        setTimeout(
+            () => window.location.reload(),
+            1000
+        )
+      } else {
+        this.$message.error(result);
+      }
+    }
   },
 };
 </script>
