@@ -1,8 +1,5 @@
 <template>
-  <div class="total">
-    <div class="log">
-      <MyHeader/>
-    </div>
+  <div>
     <div class="goods-container">
       <div class="goods-box" v-for="dish in hotDishes" :key="dish.id">
         <el-card :body-style="{ padding: '0px' }">
@@ -53,24 +50,29 @@
   </div>
 </template>
 <script>
-import {buyGoodsApi, getAvailableFoodApi} from "@/api/goods";
+import {buyGoodsApi, getAvailableGoodsApi} from "@/api/goods";
 import {getCarts, getCart, setCart, saveCarts} from "@/api/shoppingCart";
-import MyHeader from "@/components/welcomeComponents/MyHeader.vue";
 import {ref} from "vue";
-import ShoppingList from "@/components/welcomeComponents/ShoppingList.vue";
+import ShoppingList from "@/components/welcomeComponents/ShoppingCart.vue";
 
 export default {
   name: "RestaurantReservation",
-  components: {ShoppingList, MyHeader},
+  components: {ShoppingList},
   data() {
     return {
       cartVisible: false,
       hotDishes: [],
-      amounts: ref(getCart(getCarts(), 1)),
+      amounts: ref(getCart(getCarts(), this.storeId)),
       totalAmount: ref(0),
       cartContent: [],
       totalPrice: 0
     };
+  },
+  props: {
+    storeId: {
+      type: Number,
+      required: true
+    }
   },
   mounted() {
     this.fetchData();
@@ -84,7 +86,7 @@ export default {
   },
   methods: {
     async fetchData() {
-      const result = await getAvailableFoodApi();
+      const result = await getAvailableGoodsApi(this.storeId);
       this.hotDishes = result.data;
       this.updateCart();
       this.updateTotalAmount();
@@ -116,14 +118,14 @@ export default {
     setCart(goodsId, amount) {
       this.amounts[goodsId] = amount;
       this.updateTotalAmount();
-      setCart(1, goodsId, amount);
+      setCart(this.storeId, goodsId, amount);
     },
     handleChange(goodsId) {
       this.updateTotalAmount();
-      setCart(1, goodsId, this.amounts[goodsId]);
+      setCart(this.storeId, goodsId, this.amounts[goodsId]);
     },
     updateCartContent() {
-      const cart = getCart(getCarts(), 1);
+      const cart = getCart(getCarts(), this.storeId);
       this.cartContent = [];
       this.totalPrice = 0;
       for (const id in this.hotDishes) {
@@ -157,7 +159,7 @@ export default {
       if (result === 'Creation succeed.') {
         this.$message.success('订单创建成功！');
         const carts = getCarts();
-        carts[1] = null;
+        carts[this.storeId] = null;
         saveCarts(carts);
         window.location.reload();
       } else {

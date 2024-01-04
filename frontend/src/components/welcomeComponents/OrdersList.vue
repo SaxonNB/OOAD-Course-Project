@@ -1,8 +1,5 @@
 <template>
   <div>
-    <div class="log">
-      <MyHeader />
-    </div>
     <div class="order-container">
       <div class="order-box" v-for="order in currentTableData" :key="order.id">
         <el-card>
@@ -43,12 +40,10 @@
   </div>
 </template>
 <script>
-import MyHeader from "@/components/welcomeComponents/MyHeader.vue";
-import {getAllFoodApi, getFoodRecordApi} from "@/api/goods";
+import {getAllGoodsApi, getOrdersApi} from "@/api/goods";
 
 export default {
   name:"foodRecord",
-  components: {MyHeader},
   data() {
     return {
       orders: [],
@@ -56,6 +51,12 @@ export default {
       pageSize: 10,
       currentPage: 1,
     };
+  },
+  props: {
+    storeId: {
+      type: Number,
+      required: true
+    }
   },
   mounted() {
     this.fetchData();
@@ -69,12 +70,12 @@ export default {
   },
   methods: {
     async fetchData() {
-      const goodsList = (await getAllFoodApi()).data;
+      const goodsList = (await getAllGoodsApi(this.storeId)).data;
       for (const id in goodsList) {
         const goods = goodsList[id];
         this.goodsPhoto[goods.id] = goods.photos;
       }
-      this.orders = (await getFoodRecordApi()).data;
+      this.orders = (await getOrdersApi(this.storeId)).data;
       for (const orderId in this.orders) {
         const order = this.orders[orderId];
         order.totalAmount = 0;
@@ -84,7 +85,6 @@ export default {
           order.totalAmount += item.amount;
         }
       }
-      console.log(this.orders);
     },
     handleSizeChange(size) {
       this.pageSize = size;
@@ -114,7 +114,8 @@ export default {
   width: 100px;
 }
 .order-goods-name {
-  margin: 0.5em
+  text-align: left;
+  margin: 0.5em;
 }
 .order-goods-amount {
   margin: 0.5em;

@@ -12,13 +12,13 @@ import BusRoute from '../components/manageComponents/BusRoute.vue';
 import BusStation from '../components/manageComponents/BusStation.vue';
 import UserComment from '../components/manageComponents/UserComment.vue';
 import BuildingStatus from "@/components/welcomeComponents/BuildingStatus.vue";
-import RestaurantReservation from "@/components/welcomeComponents/RestaurantReservation.vue";
 import CommentAreas from "@/components/welcomeComponents/CommentAreas.vue";
-import CreativeProduct from "@/components/welcomeComponents/CreativeProduct.vue";
-import CreativeList from "@/components/welcomeComponents/CreativeList.vue";
 import BuildingDetail from "@/components/mapComponents/BuildingDetail.vue";
-import FoodRecord from "@/components/welcomeComponents/FoodRecord.vue";
 import DataStatistics from "@/components/manageComponents/DataStatistics.vue";
+import CanteenPage from "@/views/CanteenPage.vue";
+import CanteenOrdersPage from "@/views/CanteenOrdersPage.vue";
+import StorePage from "@/views/StorePage.vue";
+import StoreOrdersPage from "@/views/StoreOrdersPage.vue";
 Vue.use(VueRouter)
 
 const routes = [
@@ -50,7 +50,7 @@ const routes = [
     {path: '/comments', component: CommentAreas},
     {
         path: "/restaurant-reservation",
-        component: RestaurantReservation,
+        component: CanteenPage,
         beforeEnter: (to, from, next) => {
             // Assuming you have some authentication logic or a store to check if the user is logged in
             if (localStorage.getItem('user_token')) {
@@ -62,10 +62,10 @@ const routes = [
             }
         },
     },
-    {path:'/restaurant-reservation/record', component: FoodRecord},
+    {path:'/restaurant-reservation/record', component: CanteenOrdersPage},
     {
         path:'/creative-products',
-        component: CreativeProduct,
+        component: StorePage,
         beforeEnter: (to, from, next) => {
             // Assuming you have some authentication logic or a store to check if the user is logged in
             if (localStorage.getItem('user_token')) {
@@ -77,7 +77,7 @@ const routes = [
             }
         },
     },
-    {path:'/creative-products/creative-list', component: CreativeList},
+    {path:'/creative-products/record', component: StoreOrdersPage},
 
 ]
 
