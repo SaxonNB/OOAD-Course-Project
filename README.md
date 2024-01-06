@@ -2,7 +2,7 @@
 <h1>SUSTech Course Object-oriented Analysis and Design</h1>
 课程项目： Sustech Camous
 
-<h2>这是前端的仓库！！！！！！</h2>
+<h2>frontend是前端的仓库！！！！！！</h2>
 
 前端：史纪茂，刘轩铭，蒋竞成
 
