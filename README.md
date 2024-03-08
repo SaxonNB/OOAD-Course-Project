@@ -1,12 +1,7 @@
 # OOAD-Course-Project
 <h1>SUSTech Course Object-oriented Analysis and Design</h1>
 课程项目： Sustech Camous
-
-<h2>frontend是前端的仓库！！！！！！</h2>
-
-前端：史纪茂，刘轩铭，蒋竞成
-
-后端：杨祎勃，赵可泰
+组员：史纪茂，刘轩铭，蒋竞成，杨祎勃，赵可泰
 
 <h2> 任何操作都要在frontend目录下</h2>
 
